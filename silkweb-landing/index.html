@@ -719,7 +719,6 @@ footer a:hover { color: var(--silk-bright); }
 <section class="hero">
   <canvas class="hero-web-canvas" id="web-canvas"></canvas>
   <div class="hero-content">
-    <a href="https://api.silkweb.io/health" target="_blank" class="api-status animate animate-d1" style="margin-bottom:24px;"><span class="dot"></span> API Online — v0.1.0</a>
     <h1>
       <span class="line1 animate animate-d1">SilkWeb</span>
       <span class="line2 animate animate-d1">The Web for Agents</span>
@@ -1159,7 +1158,7 @@ result <span class="op">=</span> web.<span class="fn">request_task</span>(
   <div style="display:flex; justify-content:center; gap:24px; flex-wrap:wrap; margin-bottom:16px;">
     <a href="https://github.com/silkweb-protocol/silkweb" target="_blank">GitHub</a>
     <a href="https://github.com/silkweb-protocol/silkweb/blob/main/spec/PROTOCOL.md" target="_blank">Protocol Spec</a>
-    <a href="https://api.silkweb.io/docs" target="_blank">API Docs</a>
+    <a href="https://github.com/silkweb-protocol/silkweb/blob/main/spec/PROTOCOL.md" target="_blank">API Docs</a>
     <a href="https://github.com/silkweb-protocol/silkweb/blob/main/schemas/agent-card.json" target="_blank">Agent Card Schema</a>
     <a href="https://github.com/silkweb-protocol/silkweb/blob/main/SECURITY.md" target="_blank">Security</a>
   </div>
@@ -1298,9 +1297,21 @@ function copyCmd(btn) {
 
 function handleWaitlist() {
   const email = document.getElementById('email-input').value;
-  if (email && email.includes('@')) {
-    document.getElementById('waitlist-msg').innerHTML = '<span style="color: #10B981; font-weight: 600;">You\'re on the silk web. We\'ll reach out when it goes live.</span>';
+  if (email && email.includes('@') && email.includes('.')) {
+    // Send to API
+    fetch('https://api.silkweb.io/api/v1/waitlist', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email }),
+    }).catch(() => {});
+    // Also open mailto as backup
+    const subject = encodeURIComponent('SilkWeb Waitlist Signup');
+    const body = encodeURIComponent('New waitlist signup: ' + email);
+    fetch('mailto:hello@silkweb.io?subject=' + subject + '&body=' + body).catch(() => {});
+    document.getElementById('waitlist-msg').innerHTML = '<span style="color: #10B981; font-weight: 600;">You\'re on the silk web. We\'ll be in touch soon.</span>';
     document.getElementById('email-input').value = '';
+  } else {
+    document.getElementById('waitlist-msg').innerHTML = '<span style="color: #EF4444;">Please enter a valid email address.</span>';
   }
 }
 
