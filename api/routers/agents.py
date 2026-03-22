@@ -67,6 +67,7 @@ async def register_agent(
         authentication=request.authentication.model_dump(),
         pricing=request.pricing.model_dump(),
         trust_public_key=request.trust_public_key,
+        contact_email=request.contact_email,
         metadata_=request.metadata,
         a2a_compat=request.a2a_compat,
         mcp_compat=request.mcp_compat,

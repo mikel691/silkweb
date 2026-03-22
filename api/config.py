@@ -52,6 +52,13 @@ class Settings(BaseSettings):
     # Trusted proxies (for X-Forwarded-For)
     trusted_proxies: list[str] = Field(default=["127.0.0.1"])
 
+    # Email (Hostinger SMTP)
+    smtp_host: str = Field(default="smtp.hostinger.com", description="SMTP server host")
+    smtp_port: int = Field(default=465, description="SMTP port (465 for SSL)")
+    smtp_user: str = Field(default="information@silkweb.io", description="SMTP login")
+    smtp_password: str = Field(default="", description="SMTP password")
+    smtp_from: str = Field(default="information@silkweb.io", description="From address")
+
     @property
     def is_production(self) -> bool:
         return self.environment == "production"

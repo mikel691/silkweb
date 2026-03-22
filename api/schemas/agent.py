@@ -80,6 +80,7 @@ class AgentRegisterRequest(BaseModel):
     authentication: AuthenticationSchema = Field(default_factory=AuthenticationSchema)
     pricing: PricingSchema = Field(default_factory=PricingSchema)
     trust_public_key: str | None = Field(None, max_length=256)
+    contact_email: str | None = Field(None, max_length=320, description="Email for receipt notifications")
     metadata: dict = Field(default_factory=dict)
     a2a_compat: dict = Field(default_factory=dict)
     mcp_compat: dict = Field(default_factory=dict)

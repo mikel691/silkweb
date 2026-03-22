@@ -32,6 +32,9 @@ class Agent(Base):
     # Trust
     trust_public_key = Column(Text, nullable=True)
 
+    # Contact (optional — for receipt emails)
+    contact_email = Column(String(320), nullable=True)
+
     # Metadata
     metadata_ = Column("metadata", JSONB, default=dict)
     a2a_compat = Column(JSONB, default=dict)

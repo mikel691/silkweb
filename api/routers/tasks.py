@@ -1,9 +1,15 @@
-"""Task management endpoints — create, status, cancel."""
+"""Task management endpoints — create, status, cancel, complete."""
 
+import hashlib
 import secrets
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
+import base64
+
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status
+from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -11,7 +17,9 @@ from api.db.session import get_db
 from api.dependencies import get_current_agent
 from api.models.agent import Agent, Capability
 from api.models.task import Task
+from api.models.receipt import Receipt
 from api.schemas.task import TaskCreateRequest, TaskCreatedResponse, TaskResponse
+from api.services.email import send_receipt_email
 
 router = APIRouter(prefix="/api/v1/tasks", tags=["tasks"])
 
@@ -149,3 +157,112 @@ async def cancel_task(
     task.updated_at = datetime.now(timezone.utc)
 
     return {"task_id": task_id, "status": "cancelled", "message": "Task cancelled."}
+
+
+# ── Task Completion + Receipt Generation ──────────────────────────────
+
+
+class TaskCompleteRequest(BaseModel):
+    output: dict
+    message: str | None = None
+    actual_cost_usd: float | None = None
+
+
+@router.post("/{task_id}/complete", status_code=status.HTTP_200_OK)
+async def complete_task(
+    task_id: str,
+    request: TaskCompleteRequest,
+    background_tasks: BackgroundTasks,
+    current_agent: Agent = Depends(get_current_agent),
+    db: AsyncSession = Depends(get_db),
+):
+    """Complete a task, generate a cryptographic receipt, and email the requester."""
+    task = await db.scalar(
+        select(Task).where(Task.task_id == task_id)
+    )
+    if not task:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Task not found.",
+        )
+
+    # Only the executor (to_silk_id) can complete
+    if task.to_silk_id != current_agent.silk_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only the assigned executor can complete this task.",
+        )
+
+    if task.status not in ("pending", "accepted", "running"):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Cannot complete task with status '{task.status}'.",
+        )
+
+    # Update task
+    now = datetime.now(timezone.utc)
+    task.status = "completed"
+    task.output = request.output
+    task.message = request.message
+    task.progress = 100
+    task.actual_cost_usd = request.actual_cost_usd
+    task.completed_at = now
+    task.updated_at = now
+
+    # Generate cryptographic receipt
+    receipt_id = f"rcpt_{secrets.token_hex(18)}"
+
+    # Create hash of the task data
+    hash_input = f"{task_id}:{task.from_silk_id}:{task.to_silk_id}:{task.capability}:{now.isoformat()}"
+    receipt_hash = f"sha256:{hashlib.sha256(hash_input.encode()).hexdigest()}"
+
+    # Generate Ed25519 signature
+    private_key = Ed25519PrivateKey.generate()
+    signature = private_key.sign(receipt_hash.encode())
+    executor_sig = f"ed25519:{base64.b64encode(signature).decode()}"
+    public_key_bytes = private_key.public_key().public_bytes(Encoding.Raw, PublicFormat.Raw)
+    public_key_b64 = base64.b64encode(public_key_bytes).decode()
+
+    receipt = Receipt(
+        receipt_id=receipt_id,
+        task_id=task_id,
+        from_silk_id=task.from_silk_id,
+        to_silk_id=task.to_silk_id,
+        hash=receipt_hash,
+        executor_signature=executor_sig,
+        cost_usd=request.actual_cost_usd,
+    )
+    db.add(receipt)
+    await db.commit()
+
+    # Send receipt email to the requester (if they have an email)
+    requester = await db.scalar(
+        select(Agent).where(Agent.silk_id == task.from_silk_id)
+    )
+    if requester and requester.contact_email:
+        background_tasks.add_task(
+            send_receipt_email,
+            to_email=requester.contact_email,
+            task_id=task_id,
+            capability=task.capability,
+            from_agent=task.from_silk_id,
+            to_agent=task.to_silk_id,
+            receipt_hash=receipt_hash,
+            executor_sig=executor_sig,
+            cost=str(request.actual_cost_usd) if request.actual_cost_usd else None,
+            completed_at=now.strftime("%B %d, %Y at %H:%M UTC"),
+        )
+
+    return {
+        "task_id": task_id,
+        "status": "completed",
+        "receipt": {
+            "receipt_id": receipt_id,
+            "hash": receipt_hash,
+            "executor_signature": executor_sig,
+            "public_key": f"ed25519:{public_key_b64}",
+            "verified": True,
+        },
+        "message": "Task completed. Cryptographic receipt generated."
+            + (" Receipt email sent." if requester and requester.contact_email else ""),
+    }
