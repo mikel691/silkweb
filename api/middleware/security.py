@@ -41,7 +41,8 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
 
         # Remove server header (information disclosure)
-        response.headers.pop("server", None)
+        if "server" in response.headers:
+            del response.headers["server"]
 
         # In production, enforce HTTPS
         if settings.is_production:
