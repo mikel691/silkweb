@@ -1,0 +1,35 @@
+{
+  "name": "@silkweb/openclaw",
+  "version": "0.1.0",
+  "description": "SilkWeb adapter for OpenClaw — register, discover, and delegate tasks across the agent web.",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/silkweb-protocol/silkweb"
+  },
+  "homepage": "https://silkweb.io",
+  "keywords": [
+    "silkweb",
+    "openclaw",
+    "ai-agents",
+    "agent-discovery",
+    "agent-protocol",
+    "a2a",
+    "mcp"
+  ],
+  "author": "Armstrong Alliance Group <hello@silkweb.io>",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "test": "node --test test/",
+    "lint": "eslint src/"
+  },
+  "files": [
+    "src/",
+    "README.md",
+    "LICENSE"
+  ]
+}
