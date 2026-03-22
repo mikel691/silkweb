@@ -1,0 +1,46 @@
+name: Feature Request
+description: Suggest a new feature or improvement
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear description of the feature you'd like.
+      placeholder: I'd like SilkWeb to...
+    validations:
+      required: true
+  - type: textarea
+    id: use_case
+    attributes:
+      label: Use Case
+      description: Why is this feature needed? What problem does it solve?
+      placeholder: As a developer building agents with..., I need...
+    validations:
+      required: true
+  - type: textarea
+    id: proposed_solution
+    attributes:
+      label: Proposed Solution
+      description: How do you think this should work?
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Any other approaches you've considered?
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      options:
+        - Registry API
+        - Discovery
+        - Task Router
+        - Trust Scoring
+        - Receipts
+        - Protocol Spec
+        - SDK
+        - Adapter / Plugin
+        - Documentation
+        - Other

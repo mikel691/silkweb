@@ -1,0 +1,184 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://silkweb.io/schemas/agent-card/v0.1.0",
+  "title": "SilkWeb Agent Card",
+  "description": "Schema for an agent's identity, capabilities, and connection details on the SilkWeb network.",
+  "type": "object",
+  "required": ["silkweb_version", "agent_id", "name", "description", "version", "capabilities", "endpoint"],
+  "properties": {
+    "silkweb_version": {
+      "type": "string",
+      "const": "0.1.0",
+      "description": "Protocol version this card conforms to"
+    },
+    "agent_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{1,62}[a-z0-9]$",
+      "description": "Unique identifier, lowercase alphanumeric + hyphens, 3-64 chars"
+    },
+    "silk_id": {
+      "type": "string",
+      "pattern": "^sw_[a-f0-9-]{36}$",
+      "description": "Globally unique ID assigned by registry upon registration"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "description": "Human-readable display name"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 500,
+      "description": "What this agent does"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of the agent"
+    },
+    "capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "description"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$",
+            "description": "Unique capability identifier"
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable capability name"
+          },
+          "description": {
+            "type": "string",
+            "description": "What this capability does"
+          },
+          "input_schema": {
+            "type": "object",
+            "description": "JSON Schema for expected input"
+          },
+          "output_schema": {
+            "type": "object",
+            "description": "JSON Schema for expected output"
+          },
+          "tags": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Searchable tags"
+          }
+        }
+      }
+    },
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["silkweb", "a2a", "mcp"]
+      },
+      "default": ["silkweb"]
+    },
+    "endpoint": {
+      "type": "object",
+      "required": ["url"],
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Base URL for agent communication"
+        },
+        "transport": {
+          "type": "string",
+          "enum": ["http", "websocket", "sse"],
+          "default": "http"
+        },
+        "health_check": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL for health/ping endpoint"
+        }
+      }
+    },
+    "authentication": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["api_key", "oauth2", "mtls", "none"],
+          "default": "none"
+        },
+        "details": {
+          "type": "object",
+          "description": "Type-specific auth configuration"
+        }
+      }
+    },
+    "pricing": {
+      "type": "object",
+      "properties": {
+        "model": {
+          "type": "string",
+          "enum": ["free", "per_task", "per_minute", "subscription", "negotiable"],
+          "default": "free"
+        },
+        "currency": {
+          "type": "string",
+          "default": "USD"
+        },
+        "amount": {
+          "type": "number",
+          "minimum": 0,
+          "default": 0
+        },
+        "details": {
+          "type": "string"
+        }
+      }
+    },
+    "trust": {
+      "type": "object",
+      "properties": {
+        "public_key": {
+          "type": "string",
+          "description": "PEM-encoded Ed25519 or RSA public key"
+        },
+        "registry_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Trust score assigned by registry"
+        },
+        "verified_identity": {
+          "type": "boolean",
+          "default": false
+        },
+        "certifications": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "framework": {
+          "type": "string",
+          "description": "e.g. openclaw, crewai, langgraph, custom"
+        },
+        "model": {
+          "type": "string",
+          "description": "Underlying LLM if applicable"
+        },
+        "avg_response_time_ms": { "type": "number" },
+        "uptime_30d": { "type": "number", "minimum": 0, "maximum": 1 },
+        "tasks_completed": { "type": "integer", "minimum": 0 },
+        "created_at": { "type": "string", "format": "date-time" },
+        "updated_at": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}
