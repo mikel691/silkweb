@@ -4,7 +4,7 @@
   "description": "SilkWeb plugin for OpenClaw — discover and delegate to agents across the web.",
   "main": "index.ts",
   "license": "Apache-2.0",
-  "author": "Armstrong Alliance Group <hello@silkweb.io>",
+  "author": "Armstrong Alliance Group <information@silkweb.io>",
   "homepage": "https://silkweb.io",
   "openclaw": {
     "extensions": ["./index.ts"]

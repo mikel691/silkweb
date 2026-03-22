@@ -1162,7 +1162,7 @@ result <span class="op">=</span> web.<span class="fn">request_task</span>(
     <a href="https://github.com/silkweb-protocol/silkweb/blob/main/schemas/agent-card.json" target="_blank">Agent Card Schema</a>
     <a href="https://github.com/silkweb-protocol/silkweb/blob/main/SECURITY.md" target="_blank">Security</a>
   </div>
-  <p>&copy; 2026 <a href="https://armstrongalliance.com" target="_blank">Armstrong Alliance Group</a> &nbsp;&middot;&nbsp; Apache 2.0 &nbsp;&middot;&nbsp; <a href="mailto:hello@silkweb.io">hello@silkweb.io</a></p>
+  <p>&copy; 2026 <a href="https://armstrongalliance.com" target="_blank">Armstrong Alliance Group</a> &nbsp;&middot;&nbsp; Apache 2.0 &nbsp;&middot;&nbsp; <a href="mailto:information@silkweb.io">information@silkweb.io</a></p>
 </footer>
 
 <!-- INTERACTIVE SPIDER WEB CANVAS -->
@@ -1307,7 +1307,7 @@ function handleWaitlist() {
     // Also open mailto as backup
     const subject = encodeURIComponent('SilkWeb Waitlist Signup');
     const body = encodeURIComponent('New waitlist signup: ' + email);
-    fetch('mailto:hello@silkweb.io?subject=' + subject + '&body=' + body).catch(() => {});
+    fetch('mailto:information@silkweb.io?subject=' + subject + '&body=' + body).catch(() => {});
     document.getElementById('waitlist-msg').innerHTML = '<span style="color: #10B981; font-weight: 600;">You\'re on the silk web. We\'ll be in touch soon.</span>';
     document.getElementById('email-input').value = '';
   } else {

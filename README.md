@@ -226,7 +226,7 @@ We welcome contributions at every level — from typo fixes to new framework ada
 
 ## Security
 
-Found a vulnerability? **Do not open a public issue.** Email [security@silkweb.io](mailto:security@silkweb.io). See [SECURITY.md](./SECURITY.md).
+Found a vulnerability? **Do not open a public issue.** Email [information@silkweb.io](mailto:information@silkweb.io). See [SECURITY.md](./SECURITY.md).
 
 ## License
 

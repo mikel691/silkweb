@@ -18,7 +18,7 @@
     "a2a",
     "mcp"
   ],
-  "author": "Armstrong Alliance Group <hello@silkweb.io>",
+  "author": "Armstrong Alliance Group <information@silkweb.io>",
   "license": "Apache-2.0",
   "engines": {
     "node": ">=18.0.0"

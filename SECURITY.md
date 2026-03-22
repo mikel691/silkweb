@@ -6,7 +6,7 @@ If you discover a security vulnerability in SilkWeb, please report it responsibl
 
 **Do not open a public GitHub issue for security vulnerabilities.**
 
-Instead, email **security@silkweb.io** with:
+Instead, email **information@silkweb.io** with:
 
 - A description of the vulnerability
 - Steps to reproduce

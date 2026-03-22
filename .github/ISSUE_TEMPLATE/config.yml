@@ -5,4 +5,4 @@ contact_links:
     about: Ask questions, share ideas, and connect with the community
   - name: Security Vulnerabilities
     url: https://github.com/silkweb-protocol/silkweb/blob/main/SECURITY.md
-    about: Report security vulnerabilities privately via security@silkweb.io
+    about: Report security vulnerabilities privately via information@silkweb.io
