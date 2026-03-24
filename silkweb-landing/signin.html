@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign In — SilkWeb</title>
+<meta name="description" content="Sign in to SilkWeb to access AI agent APIs, manage your API keys, and monitor usage.">
+<meta name="theme-color" content="#06060b">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='none' stroke='%236366f1' stroke-width='1'/%3E%3Ccircle cx='16' cy='16' r='8' fill='none' stroke='%236366f1' stroke-width='0.8'/%3E%3Ccircle cx='16' cy='16' r='3' fill='none' stroke='%23818cf8' stroke-width='0.6'/%3E%3Cline x1='16' y1='2' x2='16' y2='30' stroke='%236366f1' stroke-width='0.5'/%3E%3Cline x1='2' y1='16' x2='30' y2='16' stroke='%236366f1' stroke-width='0.5'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- Google Identity Services -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #06060b;
+  --bg-card: rgba(15, 15, 25, 0.8);
+  --bg-input: rgba(15, 15, 25, 0.6);
+  --border: rgba(99, 102, 241, 0.15);
+  --border-hover: rgba(99, 102, 241, 0.4);
+  --border-focus: rgba(99, 102, 241, 0.6);
+  --text: #e2e8f0;
+  --text-dim: #94a3b8;
+  --text-muted: #64748b;
+  --purple: #6366f1;
+  --purple-light: #818cf8;
+  --purple-glow: rgba(99, 102, 241, 0.15);
+  --green: #10B981;
+  --red: #ef4444;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(99, 102, 241, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99, 102, 241, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Glow orbs */
+.glow-orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(120px);
+  pointer-events: none;
+  z-index: 0;
+}
+.glow-orb.purple { width: 500px; height: 500px; background: rgba(99, 102, 241, 0.08); top: -100px; left: -100px; }
+.glow-orb.blue { width: 400px; height: 400px; background: rgba(59, 130, 246, 0.06); bottom: -100px; right: -100px; }
+
+/* ── Logo link ── */
+.logo-link {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--text);
+  z-index: 10;
+}
+.logo-link svg { width: 28px; height: 28px; }
+.logo-link span { font-weight: 600; font-size: 1rem; letter-spacing: -0.01em; }
+
+/* ── Auth card ── */
+.auth-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 440px;
+  padding: 0 1.5rem;
+}
+
+.auth-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2.5rem;
+  backdrop-filter: blur(20px);
+}
+
+.auth-card h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  letter-spacing: -0.02em;
+}
+
+.auth-card .subtitle {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  margin-bottom: 2rem;
+}
+
+/* ── Tabs ── */
+.auth-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 2rem;
+  background: rgba(15, 15, 25, 0.4);
+  border-radius: 10px;
+  padding: 3px;
+  border: 1px solid var(--border);
+}
+
+.auth-tab {
+  flex: 1;
+  padding: 0.6rem;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s;
+  border: none;
+  background: none;
+  font-family: var(--font);
+}
+
+.auth-tab.active {
+  background: var(--purple);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+}
+
+.auth-tab:not(.active):hover {
+  color: var(--text);
+}
+
+/* ── Form ── */
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-dim);
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  font-family: var(--font);
+  color: var(--text);
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.form-group input::placeholder {
+  color: var(--text-muted);
+}
+
+/* Name field — hidden on login */
+#name-group {
+  max-height: 80px;
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease, margin 0.3s ease;
+  opacity: 1;
+}
+
+#name-group.hidden {
+  max-height: 0;
+  opacity: 0;
+  margin-bottom: 0;
+}
+
+/* ── Checkbox ── */
+.terms-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+  max-height: 40px;
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  opacity: 1;
+}
+
+.terms-group.hidden {
+  max-height: 0;
+  opacity: 0;
+  margin: 0;
+}
+
+.terms-group input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  accent-color: var(--purple);
+  flex-shrink: 0;
+}
+
+.terms-group label {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  line-height: 1.4;
+}
+
+.terms-group a {
+  color: var(--purple-light);
+  text-decoration: none;
+}
+
+.terms-group a:hover {
+  text-decoration: underline;
+}
+
+/* ── Buttons ── */
+.btn-primary {
+  width: 100%;
+  padding: 0.8rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: var(--font);
+  color: #fff;
+  background: var(--purple);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary:hover {
+  background: #5558e6;
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-primary .spinner {
+  display: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  margin: 0 auto;
+}
+
+.btn-primary.loading .btn-text { display: none; }
+.btn-primary.loading .spinner { display: block; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Divider ── */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── OAuth Buttons ── */
+.oauth-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.btn-oauth {
+  width: 100%;
+  padding: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  font-family: var(--font);
+  color: var(--text);
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-oauth:hover {
+  border-color: var(--border-hover);
+  background: rgba(20, 20, 35, 0.8);
+}
+
+.btn-oauth svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+/* ── Error / Success ── */
+.message {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+  display: none;
+}
+
+.message.error {
+  display: block;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+}
+
+.message.success {
+  display: block;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #6ee7b7;
+}
+
+/* ── Footer ── */
+.auth-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.auth-footer a {
+  color: var(--purple-light);
+  text-decoration: none;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+/* ── Password strength ── */
+.password-strength {
+  height: 3px;
+  border-radius: 2px;
+  margin-top: 0.4rem;
+  background: rgba(255,255,255,0.05);
+  overflow: hidden;
+  transition: opacity 0.3s;
+  opacity: 0;
+}
+
+.password-strength.visible { opacity: 1; }
+
+.password-strength .bar {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s, background 0.3s;
+  width: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 1.75rem;
+  }
+  .logo-link {
+    top: 1rem;
+    left: 1rem;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="glow-orb purple"></div>
+<div class="glow-orb blue"></div>
+
+<a href="/" class="logo-link">
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="16" cy="16" r="14" stroke="#6366f1" stroke-width="1"/>
+    <circle cx="16" cy="16" r="8" stroke="#6366f1" stroke-width="0.8"/>
+    <circle cx="16" cy="16" r="3" stroke="#818cf8" stroke-width="0.6"/>
+    <line x1="16" y1="2" x2="16" y2="30" stroke="#6366f1" stroke-width="0.5"/>
+    <line x1="2" y1="16" x2="30" y2="16" stroke="#6366f1" stroke-width="0.5"/>
+  </svg>
+  <span>SilkWeb</span>
+</a>
+
+<div class="auth-container">
+  <div class="auth-card">
+    <h1 id="auth-title">Welcome back</h1>
+    <p class="subtitle" id="auth-subtitle">Sign in to access your agents and API keys</p>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" data-tab="login" onclick="switchTab('login')">Sign In</button>
+      <button class="auth-tab" data-tab="signup" onclick="switchTab('signup')">Sign Up</button>
+    </div>
+
+    <div id="message" class="message"></div>
+
+    <form id="auth-form" onsubmit="handleSubmit(event)">
+      <div class="form-group hidden" id="name-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" placeholder="Your name" autocomplete="name" maxlength="100">
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" required>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Min. 8 characters" autocomplete="current-password" required minlength="8">
+        <div class="password-strength" id="pw-strength">
+          <div class="bar" id="pw-bar"></div>
+        </div>
+      </div>
+
+      <div class="terms-group hidden" id="terms-group">
+        <input type="checkbox" id="terms" name="terms">
+        <label for="terms">I agree to the <a href="/terms" target="_blank">Terms of Service</a> and <a href="/privacy" target="_blank">Privacy Policy</a></label>
+      </div>
+
+      <button type="submit" class="btn-primary" id="submit-btn">
+        <span class="btn-text">Sign In</span>
+        <div class="spinner"></div>
+      </button>
+    </form>
+
+    <div class="divider">or</div>
+
+    <div class="oauth-buttons">
+      <button class="btn-oauth" id="btn-google" onclick="handleGoogleSignIn()">
+        <svg viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+        Continue with Google
+      </button>
+
+      <button class="btn-oauth" id="btn-apple" onclick="handleAppleSignIn()">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+        Continue with Apple
+      </button>
+    </div>
+  </div>
+
+  <p class="auth-footer">
+    <a href="/">Back to SilkWeb</a>
+  </p>
+</div>
+
+<script>
+// ── Configuration ───────────────────────────────────────────────
+const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com';
+const APPLE_CLIENT_ID = 'com.silkweb.signin';
+const API_BASE = window.location.hostname === 'localhost'
+  ? 'http://localhost:8000'
+  : 'https://api.silkweb.io';
+
+let currentTab = 'login';
+
+// ── Tab Switching ───────────────────────────────────────────────
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+
+  const nameGroup = document.getElementById('name-group');
+  const termsGroup = document.getElementById('terms-group');
+  const submitBtn = document.getElementById('submit-btn');
+  const title = document.getElementById('auth-title');
+  const subtitle = document.getElementById('auth-subtitle');
+  const pwStrength = document.getElementById('pw-strength');
+
+  if (tab === 'signup') {
+    nameGroup.classList.remove('hidden');
+    termsGroup.classList.remove('hidden');
+    submitBtn.querySelector('.btn-text').textContent = 'Create Account';
+    title.textContent = 'Create your account';
+    subtitle.textContent = 'Get started with 50 free API calls per day';
+    document.getElementById('password').autocomplete = 'new-password';
+    pwStrength.classList.add('visible');
+  } else {
+    nameGroup.classList.add('hidden');
+    termsGroup.classList.add('hidden');
+    submitBtn.querySelector('.btn-text').textContent = 'Sign In';
+    title.textContent = 'Welcome back';
+    subtitle.textContent = 'Sign in to access your agents and API keys';
+    document.getElementById('password').autocomplete = 'current-password';
+    pwStrength.classList.remove('visible');
+  }
+
+  hideMessage();
+}
+
+// ── Password Strength ───────────────────────────────────────────
+
+document.getElementById('password').addEventListener('input', function() {
+  if (currentTab !== 'signup') return;
+  const val = this.value;
+  let score = 0;
+  if (val.length >= 8) score++;
+  if (val.length >= 12) score++;
+  if (/[A-Z]/.test(val) && /[a-z]/.test(val)) score++;
+  if (/[0-9]/.test(val)) score++;
+  if (/[^A-Za-z0-9]/.test(val)) score++;
+
+  const bar = document.getElementById('pw-bar');
+  const pct = (score / 5) * 100;
+  bar.style.width = pct + '%';
+
+  if (score <= 1) bar.style.background = '#ef4444';
+  else if (score <= 2) bar.style.background = '#f59e0b';
+  else if (score <= 3) bar.style.background = '#eab308';
+  else bar.style.background = '#10B981';
+});
+
+// ── Form Submit ─────────────────────────────────────────────────
+
+async function handleSubmit(e) {
+  e.preventDefault();
+  hideMessage();
+
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const name = document.getElementById('name').value.trim();
+
+  if (currentTab === 'signup') {
+    const terms = document.getElementById('terms').checked;
+    if (!terms) {
+      showMessage('Please accept the Terms of Service', 'error');
+      return;
+    }
+    if (password.length < 8) {
+      showMessage('Password must be at least 8 characters', 'error');
+      return;
+    }
+  }
+
+  const btn = document.getElementById('submit-btn');
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  try {
+    const endpoint = currentTab === 'signup' ? '/api/v1/auth/signup' : '/api/v1/auth/login';
+    const payload = currentTab === 'signup'
+      ? { email, password, name: name || null }
+      : { email, password };
+
+    const resp = await fetch(API_BASE + endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await resp.json();
+
+    if (!resp.ok) {
+      throw new Error(data.detail || 'Authentication failed');
+    }
+
+    // Store tokens
+    localStorage.setItem('sw_access_token', data.access_token);
+    localStorage.setItem('sw_refresh_token', data.refresh_token);
+    localStorage.setItem('sw_api_key', data.api_key);
+    localStorage.setItem('sw_user', JSON.stringify(data.user));
+
+    showMessage('Success! Redirecting...', 'success');
+    setTimeout(() => {
+      window.location.href = '/dashboard.html';
+    }, 500);
+
+  } catch (err) {
+    showMessage(err.message, 'error');
+  } finally {
+    btn.classList.remove('loading');
+    btn.disabled = false;
+  }
+}
+
+// ── Google Sign-In ──────────────────────────────────────────────
+
+function initGoogle() {
+  if (typeof google === 'undefined' || !google.accounts) return;
+
+  google.accounts.id.initialize({
+    client_id: GOOGLE_CLIENT_ID,
+    callback: handleGoogleCallback,
+    auto_select: false,
+  });
+}
+
+function handleGoogleSignIn() {
+  if (typeof google === 'undefined' || !google.accounts) {
+    showMessage('Google Sign-In is loading. Please try again.', 'error');
+    return;
+  }
+
+  google.accounts.id.prompt((notification) => {
+    if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+      // Fallback: use popup mode
+      google.accounts.id.renderButton(
+        document.createElement('div'),
+        { type: 'icon', size: 'large' }
+      );
+      // Trigger One Tap or redirect
+      google.accounts.oauth2.initTokenClient({
+        client_id: GOOGLE_CLIENT_ID,
+        scope: 'email profile',
+        callback: async (response) => {
+          if (response.access_token) {
+            await sendOAuthToken(response.access_token, 'google');
+          }
+        },
+      }).requestAccessToken();
+    }
+  });
+}
+
+async function handleGoogleCallback(response) {
+  if (response.credential) {
+    await sendOAuthToken(response.credential, 'google');
+  }
+}
+
+// ── Apple Sign-In ───────────────────────────────────────────────
+
+function handleAppleSignIn() {
+  // Apple Sign in with Apple JS
+  if (typeof AppleID === 'undefined') {
+    // Load Apple JS SDK dynamically
+    const script = document.createElement('script');
+    script.src = 'https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js';
+    script.onload = () => triggerAppleAuth();
+    document.head.appendChild(script);
+    return;
+  }
+  triggerAppleAuth();
+}
+
+function triggerAppleAuth() {
+  try {
+    AppleID.auth.init({
+      clientId: APPLE_CLIENT_ID,
+      scope: 'name email',
+      redirectURI: window.location.origin + '/signin.html',
+      usePopup: true,
+    });
+
+    AppleID.auth.signIn().then(async (data) => {
+      if (data.authorization && data.authorization.id_token) {
+        await sendOAuthToken(data.authorization.id_token, 'apple');
+      }
+    }).catch((err) => {
+      if (err.error !== 'popup_closed_by_user') {
+        showMessage('Apple Sign-In failed. Please try again.', 'error');
+      }
+    });
+  } catch (err) {
+    showMessage('Apple Sign-In is not available.', 'error');
+  }
+}
+
+// ── OAuth Token Exchange ────────────────────────────────────────
+
+async function sendOAuthToken(token, provider) {
+  hideMessage();
+
+  try {
+    const resp = await fetch(`${API_BASE}/api/v1/auth/${provider}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, provider }),
+    });
+
+    const data = await resp.json();
+
+    if (!resp.ok) {
+      throw new Error(data.detail || 'OAuth authentication failed');
+    }
+
+    localStorage.setItem('sw_access_token', data.access_token);
+    localStorage.setItem('sw_refresh_token', data.refresh_token);
+    localStorage.setItem('sw_api_key', data.api_key);
+    localStorage.setItem('sw_user', JSON.stringify(data.user));
+
+    showMessage('Success! Redirecting...', 'success');
+    setTimeout(() => {
+      window.location.href = '/dashboard.html';
+    }, 500);
+
+  } catch (err) {
+    showMessage(err.message, 'error');
+  }
+}
+
+// ── Messages ────────────────────────────────────────────────────
+
+function showMessage(text, type) {
+  const el = document.getElementById('message');
+  el.textContent = text;
+  el.className = 'message ' + type;
+}
+
+function hideMessage() {
+  const el = document.getElementById('message');
+  el.className = 'message';
+  el.textContent = '';
+}
+
+// ── Init ────────────────────────────────────────────────────────
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Check if already authenticated
+  const token = localStorage.getItem('sw_access_token');
+  if (token) {
+    window.location.href = '/dashboard.html';
+    return;
+  }
+
+  // Init Google
+  initGoogle();
+
+  // Check for tab param
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('tab') === 'signup') {
+    switchTab('signup');
+  }
+});
+
+// Re-init Google when the script loads
+window.addEventListener('load', initGoogle);
+</script>
+</body>
+</html>

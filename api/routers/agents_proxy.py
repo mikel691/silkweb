@@ -16,11 +16,15 @@ Agent port mapping:
 """
 
 import logging
+from datetime import datetime, timezone
 from typing import Any
 
 import httpx
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Depends, Request
 from fastapi.responses import JSONResponse
+
+from api.middleware.auth import optional_auth, require_auth
+from api.models.user import User
 
 logger = logging.getLogger("silkweb.agents_proxy")
 
@@ -152,7 +156,12 @@ async def list_agents() -> JSONResponse:
     "/{agent_name}/{path:path}",
     methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
 )
-async def proxy_to_agent(agent_name: str, path: str, request: Request) -> JSONResponse:
+async def proxy_to_agent(
+    agent_name: str,
+    path: str,
+    request: Request,
+    user: User = Depends(require_auth),
+) -> JSONResponse:
     """Proxy a request to the correct agent's localhost port.
 
     Maps:
@@ -202,6 +211,12 @@ async def proxy_to_agent(agent_name: str, path: str, request: Request) -> JSONRe
             url=target_url,
             content=body,
             headers=forward_headers,
+        )
+
+        # Log usage
+        logger.info(
+            f"Agent call: user={user.email} agent={agent_key} "
+            f"path=/{path} method={request.method} status={resp.status_code}"
         )
 
         # Try to return as JSON, fall back to plain text
@@ -261,6 +276,7 @@ def _cors_headers() -> dict[str, str]:
     return {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-        "Access-Control-Allow-Headers": "Authorization, Content-Type, openai-conversation-id, openai-ephemeral-user-id",
+        "Access-Control-Allow-Headers": "Authorization, Content-Type, X-API-Key, openai-conversation-id, openai-ephemeral-user-id",
+        "Access-Control-Expose-Headers": "X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset",
         "Access-Control-Max-Age": "3600",
     }

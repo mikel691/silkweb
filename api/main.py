@@ -21,7 +21,7 @@ from redis.asyncio import Redis
 from api.config import settings
 from api.middleware.rate_limit import RateLimitMiddleware
 from api.middleware.security import SecurityHeadersMiddleware
-from api.routers import agents, agents_proxy, discovery, health, receipts, tasks
+from api.routers import agents, agents_proxy, auth, discovery, health, receipts, tasks
 
 # Logging
 logging.basicConfig(
@@ -74,9 +74,9 @@ def create_app() -> FastAPI:
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origins,
-        allow_credentials=False,  # No cookies — API key auth only
-        allow_methods=["GET", "POST", "PUT", "DELETE"],
-        allow_headers=["Authorization", "Content-Type"],
+        allow_credentials=True,
+        allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allow_headers=["Authorization", "Content-Type", "X-API-Key"],
         max_age=3600,
     )
 
@@ -89,6 +89,7 @@ def create_app() -> FastAPI:
 
     # ── Routers ──
     app.include_router(health.router)
+    app.include_router(auth.router)
     app.include_router(agents.router)
     app.include_router(discovery.router)
     app.include_router(tasks.router)

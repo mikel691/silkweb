@@ -28,9 +28,19 @@ class Settings(BaseSettings):
     api_key_prefix: str = "sw_live_"
     api_key_test_prefix: str = "sw_test_"
 
+    # OAuth
+    google_client_id: str = Field(
+        default="",
+        description="Google OAuth client ID for token verification",
+    )
+    apple_client_id: str = Field(
+        default="",
+        description="Apple Sign-In service ID",
+    )
+
     # CORS - locked down by default
     cors_origins: list[str] = Field(
-        default=["https://silkweb.io"],
+        default=["https://silkweb.io", "http://localhost:8000", "http://localhost:3000"],
         description="Allowed CORS origins",
     )
 

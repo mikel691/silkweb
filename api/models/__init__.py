@@ -4,6 +4,7 @@ from api.models.agent import Agent, Capability
 from api.models.task import Task
 from api.models.receipt import Receipt
 from api.models.trust import TrustScore, PeerReview
+from api.models.user import User
 from api.models.waitlist import WaitlistSignup
 
-__all__ = ["Agent", "Capability", "Task", "Receipt", "TrustScore", "PeerReview", "WaitlistSignup"]
+__all__ = ["Agent", "Capability", "Task", "Receipt", "TrustScore", "PeerReview", "User", "WaitlistSignup"]
