@@ -1,0 +1,319 @@
+/* ===== SilkWeb Content Script Styles ===== */
+/* All styles are scoped under #silkweb-root to avoid page conflicts */
+
+#silkweb-fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  border: none;
+  cursor: pointer;
+  z-index: 2147483646;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4), 0 0 0 0 rgba(99, 102, 241, 0);
+  transition: all 200ms ease;
+  padding: 0;
+}
+
+#silkweb-fab:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 28px rgba(99, 102, 241, 0.5);
+}
+
+#silkweb-fab:active {
+  transform: scale(0.96);
+}
+
+#silkweb-fab svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ===== Overlay ===== */
+#silkweb-overlay {
+  position: fixed;
+  bottom: 84px;
+  right: 24px;
+  width: 340px;
+  max-height: 480px;
+  background: rgba(6, 6, 11, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 16px;
+  z-index: 2147483647;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(99, 102, 241, 0.1);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 13px;
+  color: #e8e8f0;
+  animation: silkweb-slide-up 200ms ease;
+}
+
+#silkweb-overlay.open {
+  display: flex;
+}
+
+@keyframes silkweb-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Overlay Header */
+#silkweb-overlay .sw-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid rgba(30, 30, 53, 0.8);
+}
+
+#silkweb-overlay .sw-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#silkweb-overlay .sw-logo {
+  font-size: 15px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #6366f1, #818cf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+#silkweb-overlay .sw-badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background: rgba(99, 102, 241, 0.2);
+  color: #6366f1;
+}
+
+#silkweb-overlay .sw-close {
+  background: none;
+  border: none;
+  color: #5e5e78;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  transition: all 150ms ease;
+}
+
+#silkweb-overlay .sw-close:hover {
+  color: #e8e8f0;
+  background: rgba(30, 30, 53, 0.8);
+}
+
+/* Search */
+#silkweb-overlay .sw-search-wrap {
+  padding: 10px 14px;
+  position: relative;
+}
+
+#silkweb-overlay .sw-search-icon {
+  position: absolute;
+  left: 26px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #5e5e78;
+  pointer-events: none;
+}
+
+#silkweb-overlay .sw-search {
+  width: 100%;
+  padding: 8px 10px 8px 32px;
+  background: rgba(13, 13, 20, 0.8);
+  border: 1px solid rgba(30, 30, 53, 0.8);
+  border-radius: 8px;
+  color: #e8e8f0;
+  font-size: 12px;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 150ms ease;
+}
+
+#silkweb-overlay .sw-search::placeholder {
+  color: #5e5e78;
+}
+
+#silkweb-overlay .sw-search:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+/* Agent List */
+#silkweb-overlay .sw-agents {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px 8px 8px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(42, 42, 69, 0.8) transparent;
+}
+
+#silkweb-overlay .sw-agents::-webkit-scrollbar {
+  width: 4px;
+}
+
+#silkweb-overlay .sw-agents::-webkit-scrollbar-thumb {
+  background: rgba(42, 42, 69, 0.8);
+  border-radius: 2px;
+}
+
+#silkweb-overlay .sw-agent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+#silkweb-overlay .sw-agent:hover {
+  background: rgba(19, 19, 30, 0.8);
+}
+
+#silkweb-overlay .sw-agent-name {
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.4px;
+}
+
+#silkweb-overlay .sw-agent-domain {
+  font-size: 11px;
+  color: #9898b0;
+  margin-left: 6px;
+}
+
+#silkweb-overlay .sw-agent-tier {
+  font-size: 9px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  background: rgba(99, 102, 241, 0.12);
+  color: #6366f1;
+}
+
+#silkweb-overlay .sw-agent-tier.authority {
+  background: rgba(245, 158, 11, 0.12);
+  color: #f59e0b;
+}
+
+/* Action Chips in overlay */
+#silkweb-overlay .sw-action-list {
+  padding: 4px 10px 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+#silkweb-overlay .sw-action-chip {
+  font-size: 11px;
+  padding: 5px 9px;
+  background: rgba(22, 22, 37, 0.9);
+  border: 1px solid rgba(30, 30, 53, 0.8);
+  border-radius: 6px;
+  color: #9898b0;
+  cursor: pointer;
+  transition: all 150ms ease;
+  font-family: inherit;
+}
+
+#silkweb-overlay .sw-action-chip:hover {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: #6366f1;
+  color: #e8e8f0;
+}
+
+/* Result Toast */
+#silkweb-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  max-width: 380px;
+  background: rgba(6, 6, 11, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 12px;
+  padding: 14px 16px;
+  z-index: 2147483647;
+  display: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #e8e8f0;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  animation: silkweb-slide-down 200ms ease;
+}
+
+#silkweb-toast.show {
+  display: block;
+}
+
+#silkweb-toast.error {
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+@keyframes silkweb-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#silkweb-toast .sw-toast-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+#silkweb-toast .sw-toast-title {
+  font-weight: 700;
+  font-size: 12px;
+  color: #6366f1;
+  letter-spacing: 0.5px;
+}
+
+#silkweb-toast .sw-toast-close {
+  background: none;
+  border: none;
+  color: #5e5e78;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  padding: 2px 4px;
+}
+
+#silkweb-toast .sw-toast-body {
+  font-size: 11px;
+  color: #9898b0;
+  max-height: 200px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  font-family: 'SF Mono', monospace;
+  line-height: 1.5;
+}

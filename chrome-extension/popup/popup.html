@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SilkWeb Agents</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <svg class="logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="#6366f1" stroke-width="1.5" fill="none"/>
+          <path d="M12 2 L12 22 M2 12 L22 12 M4.93 4.93 L19.07 19.07 M19.07 4.93 L4.93 19.07" stroke="#6366f1" stroke-width="0.8" opacity="0.6"/>
+          <circle cx="12" cy="12" r="6" stroke="#6366f1" stroke-width="1" fill="none" opacity="0.5"/>
+          <circle cx="12" cy="12" r="2.5" fill="#6366f1"/>
+        </svg>
+        <span class="logo-text">SilkWeb</span>
+        <span class="agent-badge">20 Agents</span>
+      </div>
+      <button id="settings-btn" class="icon-btn" title="Settings">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M8 10a2 2 0 100-4 2 2 0 000 4zm6.32-1.906l-1.082-.628a5.458 5.458 0 000-2.932l1.082-.628a.5.5 0 00.183-.683l-1-1.732a.5.5 0 00-.683-.183l-1.082.628A5.45 5.45 0 009.5 1.15V.5a.5.5 0 00-.5-.5H7a.5.5 0 00-.5.5v.65a5.45 5.45 0 00-2.238.775L3.18 1.297a.5.5 0 00-.683.183l-1 1.732a.5.5 0 00.183.683l1.082.628a5.458 5.458 0 000 2.932l-1.082.628a.5.5 0 00-.183.683l1 1.732a.5.5 0 00.683.183l1.082-.628A5.45 5.45 0 007 14.85v.65a.5.5 0 00.5.5h2a.5.5 0 00.5-.5v-.65a5.45 5.45 0 002.238-.775l1.082.628a.5.5 0 00.683-.183l1-1.732a.5.5 0 00-.183-.683z"/>
+        </svg>
+      </button>
+    </header>
+
+    <!-- Search -->
+    <div class="search-container">
+      <svg class="search-icon" width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+        <path d="M10.067 8.933a5.5 5.5 0 10-1.134 1.134l3.467 3.466a.8.8 0 001.133-1.133l-3.466-3.467zM6 10a4 4 0 110-8 4 4 0 010 8z"/>
+      </svg>
+      <input type="text" id="search-input" placeholder="Search agents..." autocomplete="off">
+    </div>
+
+    <!-- Main Content -->
+    <div id="agent-list" class="agent-list"></div>
+
+    <!-- Action Form (hidden by default) -->
+    <div id="action-panel" class="action-panel hidden">
+      <div class="action-header">
+        <button id="back-btn" class="back-btn">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+            <path d="M9.707 11.293a1 1 0 01-1.414 1.414l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L5.414 7l4.293 4.293z"/>
+          </svg>
+          Back
+        </button>
+        <div class="action-title">
+          <span id="action-agent-name"></span>
+          <span id="action-name"></span>
+        </div>
+      </div>
+      <form id="action-form" class="action-form"></form>
+      <div id="results-panel" class="results-panel hidden">
+        <div class="results-header">
+          <span>Results</span>
+          <button id="copy-results" class="copy-btn" title="Copy results">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+              <path d="M4 2a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V2zm2 0v6h6V2H6zM2 6a2 2 0 00-2 2v4a2 2 0 002 2h4a2 2 0 002-2v-1H6a3 3 0 01-3-3V4H2v2z"/>
+            </svg>
+          </button>
+        </div>
+        <pre id="results-content"></pre>
+      </div>
+    </div>
+
+    <!-- Settings Panel (hidden by default) -->
+    <div id="settings-panel" class="settings-panel hidden">
+      <div class="action-header">
+        <button id="settings-back-btn" class="back-btn">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+            <path d="M9.707 11.293a1 1 0 01-1.414 1.414l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L5.414 7l4.293 4.293z"/>
+          </svg>
+          Back
+        </button>
+        <div class="action-title">
+          <span>Settings</span>
+        </div>
+      </div>
+      <div class="settings-body">
+        <div class="setting-item">
+          <label for="api-base-url">API Base URL</label>
+          <input type="text" id="api-base-url" placeholder="https://api.silkweb.io" value="https://api.silkweb.io">
+        </div>
+        <div class="setting-item">
+          <label for="api-key">API Key</label>
+          <input type="password" id="api-key" placeholder="Enter your API key">
+        </div>
+        <div class="setting-item">
+          <label class="toggle-label">
+            <span>Show floating button on pages</span>
+            <input type="checkbox" id="show-fab" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <button id="save-settings" class="run-btn">Save Settings</button>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <a href="https://silkweb.io" target="_blank" class="footer-link">silkweb.io</a>
+      <span class="footer-version">v1.0.0</span>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
