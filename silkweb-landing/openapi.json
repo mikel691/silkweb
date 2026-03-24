@@ -1,0 +1,1665 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "SilkWeb Agents API",
+    "description": "SilkWeb is an AI agent network providing specialized intelligence across cybersecurity, logistics, infrastructure monitoring, finance, geospatial analysis, legal, personal injury, and criminal defense domains. Each agent operates independently with real analytical capabilities.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "SilkWeb / Armstrong Alliance Group",
+      "url": "https://silkweb.io"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.silkweb.io",
+      "description": "SilkWeb API Gateway"
+    }
+  ],
+  "paths": {
+    "/agents/list": {
+      "get": {
+        "operationId": "listAgents",
+        "summary": "List all available SilkWeb agents",
+        "description": "Returns a directory of all available agents with their capabilities, status, and endpoint information.",
+        "tags": ["Platform"],
+        "responses": {
+          "200": {
+            "description": "List of all available agents",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "agents": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "string" },
+                          "name": { "type": "string" },
+                          "description": { "type": "string" },
+                          "status": { "type": "string" },
+                          "endpoints": {
+                            "type": "array",
+                            "items": { "type": "string" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/agents/aegis/scan/url": {
+      "post": {
+        "operationId": "aegisScanUrl",
+        "summary": "Scan URL for security headers and threats",
+        "description": "Fetches a URL and analyzes HTTP response headers for security best practices, checks page content for threat patterns (XSS, injection), and generates a security grade A-F.",
+        "tags": ["AEGIS Security"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["url"],
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "description": "URL to scan (e.g., 'https://example.com'). Protocol is optional."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Security scan results with grade, header analysis, and threat findings",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Missing or invalid URL" },
+          "500": { "description": "Scan error (e.g., connection timeout)" }
+        }
+      }
+    },
+    "/agents/aegis/scan/ssl": {
+      "post": {
+        "operationId": "aegisScanSsl",
+        "summary": "Inspect SSL/TLS certificate and protocol",
+        "description": "Connects to a domain on port 443, inspects the SSL certificate (issuer, expiry, fingerprint), protocol version, and cipher suite. Returns a security grade.",
+        "tags": ["AEGIS Security"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["domain"],
+                "properties": {
+                  "domain": {
+                    "type": "string",
+                    "description": "Domain to inspect (e.g., 'example.com'). Protocol prefix is stripped if provided."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "SSL certificate details, protocol info, and security grade",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Missing domain" },
+          "500": { "description": "Connection or inspection error" }
+        }
+      }
+    },
+    "/agents/aegis/scan/domain": {
+      "post": {
+        "operationId": "aegisScanDomain",
+        "summary": "Analyze domain DNS and email security",
+        "description": "Checks DNS records (A, MX, NS, TXT), validates SPF and DMARC email authentication, checks for suspicious TLDs, and searches breach databases. Returns a domain reputation score.",
+        "tags": ["AEGIS Security"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["domain"],
+                "properties": {
+                  "domain": {
+                    "type": "string",
+                    "description": "Domain name to analyze (e.g., 'example.com')"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "DNS records, email auth status, reputation score, and findings",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Missing domain" },
+          "500": { "description": "DNS resolution error" }
+        }
+      }
+    },
+    "/agents/aegis/report": {
+      "post": {
+        "operationId": "aegisFullReport",
+        "summary": "Comprehensive security assessment",
+        "description": "Runs all three scans (URL headers, SSL certificate, domain/DNS) in parallel and produces a combined security report with an overall grade.",
+        "tags": ["AEGIS Security"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["domain"],
+                "properties": {
+                  "domain": {
+                    "type": "string",
+                    "description": "Domain to perform full security assessment on"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Combined report with URL, SSL, and domain scan results plus overall grade",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          }
+        }
+      }
+    },
+    "/agents/aegis/scan/email": {
+      "post": {
+        "operationId": "aegisScanEmail",
+        "summary": "Scan email address security",
+        "description": "Checks an email domain for MX records, SPF, DKIM, DMARC, breach database presence, and disposable email detection. Returns a security score and grade.",
+        "tags": ["AEGIS Security"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email"],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "Email address to scan (e.g., 'user@example.com')"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Email security score, authentication findings, and breach check results",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Missing or invalid email format" }
+        }
+      }
+    },
+    "/agents/aegis/scan/password": {
+      "post": {
+        "operationId": "aegisScanPassword",
+        "summary": "Check password strength",
+        "description": "Analyzes a password for length, complexity, common patterns, and entropy. Returns a strength score and recommendations. Password is not stored or logged.",
+        "tags": ["AEGIS Security"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["password"],
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "description": "Password to analyze (analyzed in-memory only, never stored)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password strength score, findings, and improvement recommendations",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Missing password" }
+        }
+      }
+    },
+    "/agents/navigator/route/calculate": {
+      "post": {
+        "operationId": "navigatorRouteCalculate",
+        "summary": "Calculate route distance and transit options",
+        "description": "Calculates haversine distance between two locations and estimates transit time, cost, and CO2 for all transport modes (air, sea, rail, truck). Accepts city names, airport IATA codes, port codes, or {lat, lng} coordinates.",
+        "tags": ["NAVIGATOR Logistics"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["origin", "destination"],
+                "properties": {
+                  "origin": {
+                    "description": "Origin location: city name (e.g., 'Shanghai'), IATA code ('PVG'), port code, or {lat, lng} object",
+                    "oneOf": [
+                      { "type": "string" },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "lat": { "type": "number" },
+                          "lng": { "type": "number" },
+                          "name": { "type": "string" }
+                        },
+                        "required": ["lat", "lng"]
+                      }
+                    ]
+                  },
+                  "destination": {
+                    "description": "Destination location: same format as origin",
+                    "oneOf": [
+                      { "type": "string" },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "lat": { "type": "number" },
+                          "lng": { "type": "number" },
+                          "name": { "type": "string" }
+                        },
+                        "required": ["lat", "lng"]
+                      }
+                    ]
+                  },
+                  "weightTons": {
+                    "type": "number",
+                    "default": 1,
+                    "description": "Cargo weight in metric tons (affects cost and CO2 estimates)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Distance, bearing, and comparison of all transport modes with recommendations",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Could not resolve origin or destination" }
+        }
+      }
+    },
+    "/agents/navigator/route/multimodal": {
+      "post": {
+        "operationId": "navigatorRouteMultimodal",
+        "summary": "Calculate multi-leg multimodal route",
+        "description": "Optimizes multi-leg routes combining different transport modes. Each leg specifies origin, destination, and mode. Calculates total distance, time, cost, and CO2 across all legs including transfer times.",
+        "tags": ["NAVIGATOR Logistics"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["legs"],
+                "properties": {
+                  "legs": {
+                    "type": "array",
+                    "description": "Array of route legs",
+                    "items": {
+                      "type": "object",
+                      "required": ["origin", "destination"],
+                      "properties": {
+                        "origin": { "description": "Origin (city name, code, or {lat,lng})", "oneOf": [{"type":"string"},{"type":"object"}] },
+                        "destination": { "description": "Destination (city name, code, or {lat,lng})", "oneOf": [{"type":"string"},{"type":"object"}] },
+                        "mode": {
+                          "type": "string",
+                          "enum": ["air", "sea", "rail", "truck"],
+                          "default": "truck",
+                          "description": "Transport mode for this leg"
+                        }
+                      }
+                    }
+                  },
+                  "weightTons": {
+                    "type": "number",
+                    "default": 1,
+                    "description": "Cargo weight in metric tons"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Per-leg breakdown and totals for distance, time, cost, and CO2",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Invalid legs array or unresolvable locations" }
+        }
+      }
+    },
+    "/agents/navigator/compliance/customs": {
+      "post": {
+        "operationId": "navigatorComplianceCustoms",
+        "summary": "Get customs compliance requirements",
+        "description": "Returns required documentation, tariff notes, restrictions, and average clearance time for a trade corridor between two countries.",
+        "tags": ["NAVIGATOR Logistics"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["origin", "destination"],
+                "properties": {
+                  "origin": {
+                    "type": "string",
+                    "description": "Origin country code (e.g., 'US', 'CN', 'DE')"
+                  },
+                  "destination": {
+                    "type": "string",
+                    "description": "Destination country code"
+                  },
+                  "goodsDescription": {
+                    "type": "string",
+                    "description": "Optional description of goods being shipped"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Required documents, tariff notes, restrictions, and clearance estimates",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Missing origin or destination" }
+        }
+      }
+    },
+    "/agents/navigator/estimate/carbon": {
+      "post": {
+        "operationId": "navigatorEstimateCarbon",
+        "summary": "Calculate carbon emissions by transport mode",
+        "description": "Calculates CO2 emissions for shipping cargo between two locations. Can return a single mode or compare all modes (air, sea, rail, truck) with tree-offset equivalence.",
+        "tags": ["NAVIGATOR Logistics"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["origin", "destination"],
+                "properties": {
+                  "origin": { "description": "Origin location", "oneOf": [{"type":"string"},{"type":"object"}] },
+                  "destination": { "description": "Destination location", "oneOf": [{"type":"string"},{"type":"object"}] },
+                  "weightTons": {
+                    "type": "number",
+                    "default": 1,
+                    "description": "Cargo weight in metric tons"
+                  },
+                  "mode": {
+                    "type": "string",
+                    "enum": ["air", "sea", "rail", "truck"],
+                    "description": "Optional: specific transport mode. Omit to compare all modes."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "CO2 emissions per mode with comparison insights and tree-offset data",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Missing or unresolvable locations" }
+        }
+      }
+    },
+    "/agents/sentinel/monitor/health": {
+      "post": {
+        "operationId": "sentinelMonitorHealth",
+        "summary": "HTTP health check with response time",
+        "description": "Performs real HTTP health checks on one or more URLs. Returns status (up/down/timeout), response time, status code, response headers, and a performance grade.",
+        "tags": ["SENTINEL Ops"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "description": "Single URL to check"
+                  },
+                  "urls": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "Array of URLs to check in parallel"
+                  },
+                  "timeout": {
+                    "type": "integer",
+                    "default": 10000,
+                    "description": "Timeout in milliseconds"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Health check results with status, response time, and performance grade",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Missing url or urls" }
+        }
+      }
+    },
+    "/agents/sentinel/monitor/dns": {
+      "post": {
+        "operationId": "sentinelMonitorDns",
+        "summary": "DNS resolution across multiple resolvers",
+        "description": "Resolves DNS records for a domain using multiple public resolvers (Google, Cloudflare, Quad9, OpenDNS). Checks consistency and propagation status.",
+        "tags": ["SENTINEL Ops"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["domain"],
+                "properties": {
+                  "domain": {
+                    "type": "string",
+                    "description": "Domain to resolve"
+                  },
+                  "types": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": ["A", "AAAA", "MX", "NS", "TXT", "CNAME", "SOA"]
+                    },
+                    "default": ["A", "AAAA", "MX", "NS"],
+                    "description": "DNS record types to query"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "DNS results per resolver with consistency and propagation analysis",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Missing domain" }
+        }
+      }
+    },
+    "/agents/sentinel/monitor/ssl-expiry": {
+      "post": {
+        "operationId": "sentinelMonitorSslExpiry",
+        "summary": "Check SSL certificate expiry dates",
+        "description": "Checks SSL certificate expiry for one or more domains. Returns days until expiry, severity classification (healthy/attention/warning/critical/expired), issuer, and protocol details.",
+        "tags": ["SENTINEL Ops"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "domain": {
+                    "type": "string",
+                    "description": "Single domain to check"
+                  },
+                  "domains": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "Array of domains to check"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "SSL expiry status for each domain with severity and summary",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Missing domain or domains" }
+        }
+      }
+    },
+    "/agents/sentinel/analyze/logs": {
+      "post": {
+        "operationId": "sentinelAnalyzeLogs",
+        "summary": "Analyze log lines for errors and patterns",
+        "description": "Parses log lines to detect severity levels (critical/error/warning/info), categorize issues (memory, network, auth, etc.), detect error bursts, and calculate error rates. Provides health status and recommendations.",
+        "tags": ["SENTINEL Ops"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["logs"],
+                "properties": {
+                  "logs": {
+                    "description": "Log content as a string (newline-separated) or array of strings",
+                    "oneOf": [
+                      { "type": "string" },
+                      { "type": "array", "items": { "type": "string" } }
+                    ]
+                  },
+                  "format": {
+                    "type": "string",
+                    "description": "Optional log format hint"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Log analysis with severity counts, error categories, bursts, and recommendations",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Missing logs" }
+        }
+      }
+    },
+    "/agents/sentinel/analyze/incident": {
+      "post": {
+        "operationId": "sentinelAnalyzeIncident",
+        "summary": "Classify incident and suggest root causes",
+        "description": "Classifies an incident description into categories (outage, performance, security, etc.), assigns priority P1-P4, suggests probable root causes, mitigation steps, and estimated time to resolve.",
+        "tags": ["SENTINEL Ops"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["description"],
+                "properties": {
+                  "description": {
+                    "type": "string",
+                    "description": "Free-text description of the incident"
+                  },
+                  "affectedServices": {
+                    "type": "string",
+                    "description": "Which services or systems are affected"
+                  },
+                  "userImpact": {
+                    "type": "string",
+                    "description": "Description of impact on users (e.g., 'all users affected', '50% degraded')"
+                  },
+                  "startTime": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "When the incident started (ISO 8601)"
+                  },
+                  "metrics": {
+                    "type": "object",
+                    "description": "Optional metrics data related to the incident"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Incident classification, priority, root cause analysis, and mitigation steps",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Missing description" }
+        }
+      }
+    },
+    "/agents/oracle/analyze/company": {
+      "post": {
+        "operationId": "oracleAnalyzeCompany",
+        "summary": "Analyze company financials with 20+ ratios",
+        "description": "Calculates liquidity, profitability, leverage, efficiency, valuation, and cash flow ratios from financial data. Produces a health score (A-F grade) with flags and strengths.",
+        "tags": ["ORACLE Finance"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["financials"],
+                "properties": {
+                  "company": {
+                    "type": "string",
+                    "description": "Company name"
+                  },
+                  "financials": {
+                    "type": "object",
+                    "description": "Financial data object",
+                    "properties": {
+                      "revenue": { "type": "number" },
+                      "netIncome": { "type": "number" },
+                      "operatingIncome": { "type": "number" },
+                      "ebitda": { "type": "number" },
+                      "costOfGoodsSold": { "type": "number" },
+                      "totalAssets": { "type": "number" },
+                      "currentAssets": { "type": "number" },
+                      "currentLiabilities": { "type": "number" },
+                      "totalDebt": { "type": "number" },
+                      "shareholderEquity": { "type": "number" },
+                      "cash": { "type": "number" },
+                      "inventory": { "type": "number" },
+                      "accountsReceivable": { "type": "number" },
+                      "interestExpense": { "type": "number" },
+                      "marketCap": { "type": "number" },
+                      "bookValue": { "type": "number" },
+                      "operatingCashFlow": { "type": "number" },
+                      "freeCashFlow": { "type": "number" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Financial ratios, health grade A-F, flags, strengths, and benchmarks",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Missing financials object" }
+        }
+      }
+    },
+    "/agents/oracle/analyze/risk": {
+      "post": {
+        "operationId": "oracleAnalyzeRisk",
+        "summary": "Partnership risk assessment between two companies",
+        "description": "Evaluates financial risk of a partnership by comparing two companies' health scores, leverage, profitability, liquidity, and size. Returns a risk score with specific risk factors.",
+        "tags": ["ORACLE Finance"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["companyA", "companyB"],
+                "properties": {
+                  "companyA": {
+                    "type": "object",
+                    "required": ["financials"],
+                    "properties": {
+                      "name": { "type": "string" },
+                      "financials": { "type": "object", "description": "Same structure as /analyze/company financials" }
+                    }
+                  },
+                  "companyB": {
+                    "type": "object",
+                    "required": ["financials"],
+                    "properties": {
+                      "name": { "type": "string" },
+                      "financials": { "type": "object" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Partnership risk score, grade, risk factors, and recommendation",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Missing companyA or companyB" }
+        }
+      }
+    },
+    "/agents/oracle/detect/fraud": {
+      "post": {
+        "operationId": "oracleDetectFraud",
+        "summary": "Detect fraud with Benford's Law and anomaly analysis",
+        "description": "Analyzes numbers using Benford's Law (chi-squared test for digit distribution), detects duplicate transactions, identifies statistical outliers, round-number bias, and threshold gaming patterns.",
+        "tags": ["ORACLE Finance"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "numbers": {
+                    "type": "array",
+                    "items": { "type": "number" },
+                    "description": "Array of numbers to test against Benford's Law"
+                  },
+                  "transactions": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "amount": { "type": "number" },
+                        "description": { "type": "string" },
+                        "date": { "type": "string" }
+                      }
+                    },
+                    "description": "Array of transactions for duplicate/anomaly detection"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Benford's Law results, duplicate detection, anomalies, and overall risk assessment",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Missing numbers or transactions" }
+        }
+      }
+    },
+    "/agents/oracle/compliance/check": {
+      "post": {
+        "operationId": "oracleComplianceCheck",
+        "summary": "Check regulatory compliance by jurisdiction",
+        "description": "Returns applicable financial and data regulations for specified jurisdictions (US, EU, UK, SG, JP, AE, CN). Identifies relevant regulations based on industry and company type, and flags cross-border considerations.",
+        "tags": ["ORACLE Finance"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "jurisdiction": {
+                    "type": "string",
+                    "description": "Country code (e.g., 'US', 'EU', 'UK', 'SG', 'JP')"
+                  },
+                  "jurisdictions": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "Array of country codes for multi-jurisdiction check"
+                  },
+                  "industry": {
+                    "type": "string",
+                    "description": "Industry sector (e.g., 'financial services', 'technology')"
+                  },
+                  "companyType": {
+                    "type": "string",
+                    "description": "Company type (e.g., 'public', 'private', 'startup')"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Applicable regulations per jurisdiction with scope, penalties, and cross-border notes",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Missing jurisdiction" }
+        }
+      }
+    },
+    "/agents/atlas/geo/distance": {
+      "post": {
+        "operationId": "atlasGeoDistance",
+        "summary": "Calculate distance with haversine and Vincenty methods",
+        "description": "Calculates the distance between two points using both haversine (spherical) and Vincenty (ellipsoidal WGS-84) formulas. Returns distance in km, miles, nautical miles, plus bearing, cardinal direction, and midpoint.",
+        "tags": ["ATLAS Geospatial"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["from", "to"],
+                "properties": {
+                  "from": {
+                    "description": "Origin: city name (e.g., 'London') or {lat, lng} object",
+                    "oneOf": [{"type":"string"},{"type":"object","properties":{"lat":{"type":"number"},"lng":{"type":"number"}},"required":["lat","lng"]}]
+                  },
+                  "to": {
+                    "description": "Destination: city name or {lat, lng} object",
+                    "oneOf": [{"type":"string"},{"type":"object","properties":{"lat":{"type":"number"},"lng":{"type":"number"}},"required":["lat","lng"]}]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Haversine and Vincenty distances, bearing, midpoint",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Unresolvable locations" }
+        }
+      }
+    },
+    "/agents/atlas/geo/geofence": {
+      "post": {
+        "operationId": "atlasGeoGeofence",
+        "summary": "Point-in-polygon geofence test",
+        "description": "Uses ray-casting algorithm to determine if a point is inside a polygon. Returns inside/outside status, distance to nearest edge, and polygon area.",
+        "tags": ["ATLAS Geospatial"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["point", "polygon"],
+                "properties": {
+                  "point": {
+                    "description": "Point to test: city name or {lat, lng}",
+                    "oneOf": [{"type":"string"},{"type":"object","properties":{"lat":{"type":"number"},"lng":{"type":"number"}},"required":["lat","lng"]}]
+                  },
+                  "polygon": {
+                    "type": "array",
+                    "description": "Polygon vertices as array of {lat, lng} objects",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "lat": { "type": "number" },
+                        "lng": { "type": "number" }
+                      },
+                      "required": ["lat", "lng"]
+                    }
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "Optional name for the geofence zone"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Inside/outside result, distance to nearest edge, polygon area",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Missing point or polygon" }
+        }
+      }
+    },
+    "/agents/atlas/geo/elevation": {
+      "post": {
+        "operationId": "atlasGeoElevation",
+        "summary": "Look up elevation for a location",
+        "description": "Returns elevation data for a city or coordinate. Uses city database for known cities, or inverse distance weighting interpolation from nearby cities for custom coordinates.",
+        "tags": ["ATLAS Geospatial"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["location"],
+                "properties": {
+                  "location": {
+                    "description": "City name or {lat, lng} coordinates",
+                    "oneOf": [{"type":"string"},{"type":"object","properties":{"lat":{"type":"number"},"lng":{"type":"number"}},"required":["lat","lng"]}]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Elevation in meters and feet with nearby cities for reference",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Unresolvable location" }
+        }
+      }
+    },
+    "/agents/atlas/geo/sun": {
+      "post": {
+        "operationId": "atlasGeoSun",
+        "summary": "Calculate sunrise, sunset, and twilight times",
+        "description": "Uses NOAA solar position algorithms to compute sunrise, sunset, civil/nautical/astronomical twilight, solar noon, day length, and polar conditions for any location and date.",
+        "tags": ["ATLAS Geospatial"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["location"],
+                "properties": {
+                  "location": {
+                    "description": "City name or {lat, lng}",
+                    "oneOf": [{"type":"string"},{"type":"object","properties":{"lat":{"type":"number"},"lng":{"type":"number"}},"required":["lat","lng"]}]
+                  },
+                  "date": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Date in ISO format (YYYY-MM-DD). Defaults to today."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sunrise, sunset, twilight times, day length, solar noon altitude",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Unresolvable location or invalid date" }
+        }
+      }
+    },
+    "/agents/atlas/analyze/route": {
+      "post": {
+        "operationId": "atlasAnalyzeRoute",
+        "summary": "Analyze multi-waypoint route",
+        "description": "Calculates Vincenty distances, bearings, travel times, and midpoints for each leg of a multi-waypoint route. Includes detour ratio, elevation profile, and formatted travel times.",
+        "tags": ["ATLAS Geospatial"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["waypoints"],
+                "properties": {
+                  "waypoints": {
+                    "type": "array",
+                    "description": "Ordered list of waypoints (minimum 2). Each: city name or {lat, lng}.",
+                    "items": {
+                      "oneOf": [{"type":"string"},{"type":"object","properties":{"lat":{"type":"number"},"lng":{"type":"number"}},"required":["lat","lng"]}]
+                    },
+                    "minItems": 2
+                  },
+                  "speed": {
+                    "type": "number",
+                    "default": 100,
+                    "description": "Travel speed in km/h (default 100)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Per-leg distances, bearings, travel times; route summary with detour ratio",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Less than 2 waypoints or unresolvable locations" }
+        }
+      }
+    },
+    "/agents/justice/analyze/contract": {
+      "post": {
+        "operationId": "justiceAnalyzeContract",
+        "summary": "Analyze contract text for clauses and risks",
+        "description": "Scans contract text to identify 15 standard clause types (termination, liability, IP, etc.), detect 17 risk patterns (one-sided discretion, unlimited liability, etc.), flag missing protections, and calculate an overall risk score 1-10.",
+        "tags": ["JUSTICE Legal"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["text"],
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "description": "Full contract text to analyze"
+                  },
+                  "partyName": {
+                    "type": "string",
+                    "description": "Optional: your party name to identify favorable/unfavorable terms"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Identified clauses, risk score, risk items, missing protections, and summary",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Missing contract text" }
+        }
+      }
+    },
+    "/agents/justice/analyze/nda": {
+      "post": {
+        "operationId": "justiceAnalyzeNda",
+        "summary": "Specialized NDA analysis",
+        "description": "Analyzes an NDA to determine type (mutual vs one-way), scope of confidential information, duration, standard exclusions, remedies for breach, and flags concerns like non-compete clauses or perpetual terms.",
+        "tags": ["JUSTICE Legal"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["text"],
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "description": "Full NDA text to analyze"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "NDA type, scope, duration, exclusions, remedies, and concerns",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Missing NDA text" }
+        }
+      }
+    },
+    "/agents/justice/research/statute": {
+      "post": {
+        "operationId": "justiceResearchStatute",
+        "summary": "Research statutes for a legal question",
+        "description": "Matches a legal question to relevant areas of law (breach of contract, employment, IP, negligence, business formation, consumer protection, real estate, data privacy) and returns applicable federal law, key concepts, remedies, and landmark cases.",
+        "tags": ["JUSTICE Legal"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["question"],
+                "properties": {
+                  "question": {
+                    "type": "string",
+                    "description": "Legal question or topic to research (e.g., 'What are my rights if a contract is breached?')"
+                  },
+                  "jurisdiction": {
+                    "type": "string",
+                    "description": "Optional jurisdiction context (e.g., 'California', 'Federal')"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Matched legal topic, federal law, key concepts, remedies, and key case",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          }
+        }
+      }
+    },
+    "/agents/justice/draft/clause": {
+      "post": {
+        "operationId": "justiceDraftClause",
+        "summary": "Generate standard contract clause from templates",
+        "description": "Generates contract clause language from templates. Supports types like indemnification, limitation of liability, confidentiality, termination, force majeure, etc. Parameters can be filled in to customize the output.",
+        "tags": ["JUSTICE Legal"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["type"],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "description": "Clause type (e.g., 'indemnification', 'limitation_of_liability', 'confidentiality', 'termination')"
+                  },
+                  "parameters": {
+                    "type": "object",
+                    "description": "Key-value pairs to fill template placeholders (e.g., {\"party_a\": \"Acme Corp\", \"liability_cap\": \"$1,000,000\"})"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Generated clause text with parameters used and key considerations",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Unknown clause type (returns available types)" }
+        }
+      }
+    },
+    "/agents/justice/compliance/check": {
+      "post": {
+        "operationId": "justiceComplianceCheck",
+        "summary": "Check business compliance requirements",
+        "description": "Identifies applicable regulations for a business based on its description and industry. Covers technology (CCPA, COPPA, DMCA), healthcare (HIPAA), financial (SOX, BSA/AML), retail, manufacturing, and general employment law.",
+        "tags": ["JUSTICE Legal"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["businessDescription"],
+                "properties": {
+                  "businessDescription": {
+                    "type": "string",
+                    "description": "Description of the business and its activities"
+                  },
+                  "jurisdiction": {
+                    "type": "string",
+                    "description": "Primary jurisdiction (e.g., 'US', 'California')"
+                  },
+                  "industry": {
+                    "type": "string",
+                    "description": "Industry sector (e.g., 'technology', 'healthcare', 'financial')"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Applicable regulations by industry with requirements and compliance actions",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Missing business description" }
+        }
+      }
+    },
+    "/agents/shield/evaluate/case": {
+      "post": {
+        "operationId": "shieldEvaluateCase",
+        "summary": "Evaluate personal injury case strength",
+        "description": "Evaluates a personal injury case by identifying liable parties, analyzing injuries against a database of settlement ranges, assessing case strength based on circumstances, and checking statute of limitations.",
+        "tags": ["SHIELD Injury"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["accidentType"],
+                "properties": {
+                  "accidentType": {
+                    "type": "string",
+                    "description": "Type of accident (e.g., 'car accident', 'slip and fall', 'workplace injury', 'medical malpractice')"
+                  },
+                  "injuries": {
+                    "description": "Injury or list of injuries (e.g., 'whiplash', 'broken arm', ['concussion', 'herniated disc'])",
+                    "oneOf": [
+                      { "type": "string" },
+                      { "type": "array", "items": { "type": "string" } }
+                    ]
+                  },
+                  "circumstances": {
+                    "type": "string",
+                    "description": "Description of how the accident occurred"
+                  },
+                  "date": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Date of accident (YYYY-MM-DD) for statute of limitations check"
+                  },
+                  "state": {
+                    "type": "string",
+                    "description": "US state (name or abbreviation) for statute of limitations"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Case strength score, liable parties, injury analysis, settlement range, and SOL status",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Missing accident type" }
+        }
+      }
+    },
+    "/agents/shield/calculate/damages": {
+      "post": {
+        "operationId": "shieldCalculateDamages",
+        "summary": "Calculate economic and non-economic damages",
+        "description": "Calculates total damages using both the multiplier method (severity-based multiplier on economic damages) and per diem method (daily rate for recovery period). Includes economic (medical, lost wages) and non-economic (pain and suffering) components.",
+        "tags": ["SHIELD Injury"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "injuries": {
+                    "description": "Injury type(s) to determine severity multiplier",
+                    "oneOf": [
+                      { "type": "string" },
+                      { "type": "array", "items": { "type": "string" } }
+                    ]
+                  },
+                  "medicalCosts": {
+                    "type": "number",
+                    "description": "Total medical expenses incurred"
+                  },
+                  "lostWages": {
+                    "type": "number",
+                    "description": "Income lost due to injury"
+                  },
+                  "futureMedical": {
+                    "type": "number",
+                    "description": "Estimated future medical costs"
+                  },
+                  "futureLostWages": {
+                    "type": "number",
+                    "description": "Estimated future lost income"
+                  },
+                  "severity": {
+                    "type": "string",
+                    "enum": ["mild", "moderate", "severe", "catastrophic"],
+                    "description": "Override severity level for multiplier calculation"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Economic damages, non-economic damages (multiplier and per diem methods), and total ranges",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Missing medicalCosts or injuries" }
+        }
+      }
+    },
+    "/agents/shield/check/statute": {
+      "post": {
+        "operationId": "shieldCheckStatute",
+        "summary": "Check statute of limitations deadline",
+        "description": "Calculates the filing deadline based on state, accident type (personal injury, wrongful death, medical malpractice, product liability), and accident date. Returns days remaining, status, and filing requirements.",
+        "tags": ["SHIELD Injury"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["state", "accidentDate"],
+                "properties": {
+                  "state": {
+                    "type": "string",
+                    "description": "US state name or two-letter abbreviation"
+                  },
+                  "accidentDate": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Date of the accident (YYYY-MM-DD)"
+                  },
+                  "accidentType": {
+                    "type": "string",
+                    "description": "Type of claim (e.g., 'personal injury', 'wrongful death', 'medical malpractice', 'product liability'). Defaults to personal injury."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Filing deadline, days remaining, status, discovery rule, and all state statutes",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Missing state or accident date" }
+        }
+      }
+    },
+    "/agents/shield/analyze/insurance": {
+      "post": {
+        "operationId": "shieldAnalyzeInsurance",
+        "summary": "Analyze insurance policy coverage",
+        "description": "Evaluates insurance policy coverage limits against recommended minimums, identifies coverage gaps, and suggests strategies for maximizing recovery. Supports auto, homeowners, umbrella, and health policies.",
+        "tags": ["SHIELD Injury"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["policyType"],
+                "properties": {
+                  "policyType": {
+                    "type": "string",
+                    "description": "Insurance policy type (e.g., 'auto', 'homeowners', 'umbrella', 'health')"
+                  },
+                  "coverageLimits": {
+                    "type": "object",
+                    "description": "Policy coverage limits (e.g., {bodilyInjury: 100000, propertyDamage: 50000, uninsuredMotorist: 100000})"
+                  },
+                  "deductible": {
+                    "type": "number",
+                    "description": "Policy deductible amount"
+                  },
+                  "details": {
+                    "type": "string",
+                    "description": "Additional policy details or questions"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Coverage assessment, gaps, and recovery strategies",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Missing policy type" }
+        }
+      }
+    },
+    "/agents/shield/guide/steps": {
+      "post": {
+        "operationId": "shieldGuideSteps",
+        "summary": "Get immediate action checklist for accident type",
+        "description": "Returns a prioritized action guide for a specific accident type including immediate steps, things to avoid, 24-hour actions, and one-week follow-ups. Covers car accidents, slip and fall, workplace injuries, medical malpractice, and dog bites.",
+        "tags": ["SHIELD Injury"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["accidentType"],
+                "properties": {
+                  "accidentType": {
+                    "type": "string",
+                    "description": "Type of accident (e.g., 'car accident', 'slip and fall', 'workplace injury', 'medical malpractice', 'dog bite')"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Prioritized action checklist with immediate, do-not, 24-hour, and 1-week steps",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Missing accident type" }
+        }
+      }
+    },
+    "/agents/fortress/analyze/charge": {
+      "post": {
+        "operationId": "fortressAnalyzeCharge",
+        "summary": "Analyze criminal charges, elements, and penalties",
+        "description": "Looks up federal criminal charges and returns statutory elements the prosecution must prove, maximum penalties, sentencing ranges, applicable defenses, and classification. Supports single or multiple charges.",
+        "tags": ["FORTRESS Defense"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "charge": {
+                    "type": "string",
+                    "description": "Single charge to analyze (e.g., 'wire fraud', 'drug trafficking', 'conspiracy')"
+                  },
+                  "charges": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "Multiple charges to analyze"
+                  },
+                  "jurisdiction": {
+                    "type": "string",
+                    "description": "Jurisdiction context (defaults to Federal)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Charge details, elements, penalties, sentencing range, and defenses",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Missing charge (returns list of available charges)" }
+        }
+      }
+    },
+    "/agents/fortress/rights/explain": {
+      "post": {
+        "operationId": "fortressRightsExplain",
+        "summary": "Explain constitutional rights by situation",
+        "description": "Returns applicable constitutional rights, what to do, what not to do, and critical phrases for situations like traffic stops, arrests, searches, interrogations, protests, and grand jury proceedings.",
+        "tags": ["FORTRESS Defense"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["situation"],
+                "properties": {
+                  "situation": {
+                    "type": "string",
+                    "description": "Situation type (e.g., 'traffic stop', 'arrest', 'search', 'interrogation', 'protest', 'grand jury')"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Constitutional basis, rights, do's and don'ts, and critical phrases to invoke",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Unknown situation (returns available situations)" }
+        }
+      }
+    },
+    "/agents/fortress/analyze/evidence": {
+      "post": {
+        "operationId": "fortressAnalyzeEvidence",
+        "summary": "Analyze evidence for suppression arguments",
+        "description": "Evaluates evidence for potential suppression motions based on Fourth Amendment (search/seizure), Fifth Amendment (Miranda), digital privacy (Riley, Carpenter), wiretap law, and chain of custody issues. Includes fruit of the poisonous tree doctrine.",
+        "tags": ["FORTRESS Defense"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "evidenceType": {
+                    "type": "string",
+                    "description": "Type of evidence (e.g., 'phone records', 'confession', 'physical evidence', 'digital', 'wiretap')"
+                  },
+                  "howObtained": {
+                    "type": "string",
+                    "description": "How the evidence was obtained (e.g., 'search without warrant', 'consent', 'wiretap')"
+                  },
+                  "chainOfCustody": {
+                    "type": "string",
+                    "description": "Chain of custody details (e.g., 'gap in custody', 'tampered', 'unknown handling')"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "General description of the evidence"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Suppression arguments with legal basis, strength, key cases, and next steps",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Missing evidence type or description" }
+        }
+      }
+    },
+    "/agents/fortress/sentencing/guide": {
+      "post": {
+        "operationId": "fortressSentencingGuide",
+        "summary": "Federal sentencing guidelines and factors",
+        "description": "Calculates advisory sentencing range based on charge and criminal history category. Lists aggravating and mitigating factors, alternative sentencing options (probation, home confinement, plea bargains), and key legal considerations.",
+        "tags": ["FORTRESS Defense"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["charge"],
+                "properties": {
+                  "charge": {
+                    "type": "string",
+                    "description": "Criminal charge to look up sentencing for"
+                  },
+                  "criminalHistory": {
+                    "type": "string",
+                    "description": "Criminal history level: 'none', 'minor', 'moderate', 'significant', 'serious', 'extensive' (or Roman numeral I-VI)"
+                  },
+                  "jurisdiction": {
+                    "type": "string",
+                    "description": "Jurisdiction (defaults to Federal)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sentencing range, mandatory minimums, aggravating/mitigating factors, and alternatives",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Charge not found" }
+        }
+      }
+    },
+    "/agents/fortress/compare/charges": {
+      "post": {
+        "operationId": "fortressCompareCharges",
+        "summary": "Compare penalties across multiple charges",
+        "description": "Compares two or more criminal charges side-by-side showing maximum penalties, mandatory minimums, expungement eligibility, and plea bargain strategies including charge bargaining and mandatory minimum avoidance.",
+        "tags": ["FORTRESS Defense"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["charges"],
+                "properties": {
+                  "charges": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "minItems": 2,
+                    "description": "Array of charge names to compare (minimum 2)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Side-by-side charge comparison and plea bargain analysis",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          },
+          "400": { "description": "Need at least 2 valid charges" }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Platform",
+      "description": "SilkWeb platform endpoints"
+    },
+    {
+      "name": "AEGIS Security",
+      "description": "Cybersecurity threat intelligence -- URL scanning, SSL inspection, domain reputation, email security, and password strength analysis"
+    },
+    {
+      "name": "NAVIGATOR Logistics",
+      "description": "Global logistics intelligence -- route calculation, multimodal optimization, customs compliance, and carbon footprint estimation"
+    },
+    {
+      "name": "SENTINEL Ops",
+      "description": "IT infrastructure monitoring -- health checks, DNS resolution, SSL expiry tracking, log analysis, and incident classification"
+    },
+    {
+      "name": "ORACLE Finance",
+      "description": "Financial intelligence -- company analysis with 20+ ratios, partnership risk scoring, Benford's Law fraud detection, and regulatory compliance"
+    },
+    {
+      "name": "ATLAS Geospatial",
+      "description": "Geospatial intelligence -- Vincenty/haversine distance, geofencing, elevation lookup, sun calculations, and route analysis"
+    },
+    {
+      "name": "JUSTICE Legal",
+      "description": "General legal and contract law -- contract analysis, NDA review, statute research, clause drafting, and compliance checking"
+    },
+    {
+      "name": "SHIELD Injury",
+      "description": "Personal injury / accident law -- case evaluation, damage calculation, statute of limitations, insurance analysis, and action guides"
+    },
+    {
+      "name": "FORTRESS Defense",
+      "description": "Criminal defense intelligence -- charge analysis, constitutional rights, evidence suppression, sentencing guidelines, and charge comparison"
+    }
+  ]
+}

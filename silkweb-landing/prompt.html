@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SilkWeb Prompt — Connect 20 AI Agents to Any Chat</title>
+<meta name="description" content="Copy this prompt into Claude, ChatGPT, Gemini, or any AI chat to instantly access 20 specialized agents.">
+<meta property="og:title" content="SilkWeb Prompt — 20 AI Agents in One Prompt">
+<meta property="og:description" content="Paste into any AI chat. Get access to cybersecurity, legal, finance, logistics, and 16 more specialized agents.">
+<meta property="og:url" content="https://silkweb.io/prompt">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#06060b;color:#e2e8f0;font-family:'Inter',system-ui,sans-serif;min-height:100vh}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+.container{max-width:800px;margin:0 auto;padding:40px 20px}
+.back{color:#818cf8;text-decoration:none;font-size:14px;display:inline-flex;align-items:center;gap:6px;margin-bottom:32px}
+.back:hover{color:#a5b4fc}
+h1{font-size:36px;font-weight:700;margin-bottom:8px}
+h1 span{background:linear-gradient(135deg,#818cf8,#6366f1);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.subtitle{color:#64748b;font-size:16px;margin-bottom:32px;line-height:1.6}
+.prompt-box{background:#0f0f1a;border:1px solid #1e1e3a;border-radius:12px;padding:0;position:relative;overflow:hidden}
+.prompt-header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #1e1e3a;background:#0a0a14}
+.prompt-label{font-size:13px;color:#64748b;font-family:'JetBrains Mono',monospace}
+.copy-btn{background:#6366f1;color:#fff;border:none;padding:8px 20px;border-radius:6px;font-size:14px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s}
+.copy-btn:hover{background:#818cf8}
+.copy-btn.copied{background:#10B981}
+.prompt-content{padding:20px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.8;white-space:pre-wrap;color:#c0c8e0;max-height:600px;overflow-y:auto}
+.prompt-content::-webkit-scrollbar{width:6px}
+.prompt-content::-webkit-scrollbar-track{background:#0a0a14}
+.prompt-content::-webkit-scrollbar-thumb{background:#2a2a4a;border-radius:3px}
+.info{margin-top:32px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.info-card{background:#0f0f1a;border:1px solid #1e1e3a;border-radius:10px;padding:20px}
+.info-card h3{font-size:15px;font-weight:600;margin-bottom:8px;color:#818cf8}
+.info-card p{font-size:13px;color:#64748b;line-height:1.6}
+.info-card code{background:#1a1a2e;padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#10B981}
+.agent-count{display:inline-flex;align-items:center;gap:6px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:20px;padding:4px 12px;font-size:13px;color:#818cf8;margin-bottom:24px}
+.agent-count .dot{width:6px;height:6px;background:#10B981;border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.updated{text-align:center;margin-top:24px;font-size:12px;color:#4a4a6a}
+@media(max-width:600px){
+  h1{font-size:28px}
+  .info{grid-template-columns:1fr}
+  .prompt-content{font-size:12px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="/" class="back">&larr; silkweb.io</a>
+
+  <h1>The <span>SilkWeb</span> Prompt</h1>
+  <p class="subtitle">Copy this prompt into Claude, ChatGPT, Gemini, OpenClaw, or any AI chat.<br>Instantly access 20 specialized agents across every major industry.</p>
+
+  <div class="agent-count"><span class="dot"></span> 20 agents &bull; 80+ endpoints &bull; 20 industries</div>
+
+  <div class="prompt-box">
+    <div class="prompt-header">
+      <span class="prompt-label">system-prompt.txt</span>
+      <button class="copy-btn" onclick="copyPrompt()">Copy to Clipboard</button>
+    </div>
+    <div class="prompt-content" id="prompt-text">You are connected to the SilkWeb agent network (silkweb.io). You have access to 20 specialized AI agents. When the user needs help, identify the best agent and route their request.
+
+Available agents:
+
+ 1. AEGIS      — Cybersecurity (scan URLs, SSL audit, domain reputation)
+ 2. NAVIGATOR  — Logistics (shipping routes, customs, carbon footprint)
+ 3. SENTINEL   — IT Monitoring (health checks, DNS, log analysis, incidents)
+ 4. ORACLE     — Finance (company analysis, fraud detection, compliance)
+ 5. ATLAS      — Geospatial (distance, geofencing, sunrise/sunset, routes)
+ 6. DESIGN     — Graphics (social cards, code screenshots, infographics)
+ 7. JUSTICE    — Contract Law (contract review, NDA analysis, clause drafting)
+ 8. SHIELD     — Personal Injury (case evaluation, damages, statutes)
+ 9. FORTRESS   — Criminal Defense (charge analysis, rights, sentencing)
+10. MEDIC      — Healthcare (symptoms, drug interactions, vitals, HIPAA)
+11. ARCHITECT  — Code & DevOps (code review, dependencies, tech debt)
+12. BROKER     — Real Estate (property valuation, ROI, market analysis)
+13. SCRIBE     — Content & Copy (blogs, emails, social posts, readability)
+14. PHANTOM    — OSINT (domain intel, email investigation, digital footprint)
+15. DIPLOMAT   — HR & Compliance (job analysis, salary, labor law, policy)
+16. MERCHANT   — E-Commerce (listing optimization, pricing, inventory)
+17. TUTOR      — Education (curriculum, quizzes, flashcards, skill assessment)
+18. CLIMATE    — Sustainability (carbon calculator, energy audit, ESG scoring)
+19. SIGNAL     — Communications (press releases, crisis response, media kits)
+20. FORGE      — Manufacturing (BOM analysis, supplier scoring, quality control)
+
+When the user asks for help:
+1. Show the numbered list above
+2. Let them pick an agent by number or name
+3. Ask what they need
+4. Route their request to: https://api.silkweb.io/agents/{agent-name}/{endpoint}
+5. Return the results clearly formatted
+
+All agents are free during beta. Every interaction is cryptographically verified.
+Network: silkweb.io | API: api.silkweb.io | GitHub: github.com/silkweb-protocol/silkweb</div>
+  </div>
+
+  <div class="info">
+    <div class="info-card">
+      <h3>Claude Desktop</h3>
+      <p>Paste into a Project's system prompt, or install the MCP server:<br><code>npx silkweb-mcp-server</code></p>
+    </div>
+    <div class="info-card">
+      <h3>ChatGPT</h3>
+      <p>Create a Custom GPT, paste the prompt as Instructions. Enable web browsing for API calls.</p>
+    </div>
+    <div class="info-card">
+      <h3>OpenClaw</h3>
+      <p>Install the plugin:<br><code>npm install silkweb-openclaw</code></p>
+    </div>
+    <div class="info-card">
+      <h3>Any AI Chat</h3>
+      <p>Paste the prompt at the start of any conversation. The AI will use SilkWeb agents to help you.</p>
+    </div>
+  </div>
+
+  <p class="updated" id="updated-date">Last updated: March 24, 2026</p>
+</div>
+
+<script>
+function copyPrompt() {
+  const text = document.getElementById('prompt-text').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copy to Clipboard';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+</script>
+</body>
+</html>
