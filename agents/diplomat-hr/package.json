@@ -1,0 +1,16 @@
+{
+  "name": "silkweb-diplomat-hr",
+  "version": "1.0.0",
+  "description": "DIPLOMAT — HR & Compliance Intelligence Agent for the SilkWeb network",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "register": "node scripts/register.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "keywords": ["hr", "compliance", "salary", "labor-law", "job-description", "silkweb", "agent"],
+  "license": "Apache-2.0"
+}

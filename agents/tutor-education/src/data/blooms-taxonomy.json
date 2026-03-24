@@ -1,0 +1,10 @@
+{
+  "levels": [
+    {"level":1,"name":"Remember","description":"Recall facts and basic concepts","verbs":["define","list","identify","name","recall","recognize","state","describe","label","match","select"]},
+    {"level":2,"name":"Understand","description":"Explain ideas or concepts","verbs":["explain","summarize","paraphrase","classify","compare","interpret","discuss","distinguish","predict","translate","illustrate"]},
+    {"level":3,"name":"Apply","description":"Use information in new situations","verbs":["apply","demonstrate","solve","use","implement","execute","calculate","complete","show","modify","construct"]},
+    {"level":4,"name":"Analyze","description":"Draw connections among ideas","verbs":["analyze","differentiate","examine","compare","contrast","investigate","categorize","deconstruct","organize","relate","test"]},
+    {"level":5,"name":"Evaluate","description":"Justify a stand or decision","verbs":["evaluate","judge","argue","defend","critique","assess","rank","rate","support","recommend","justify"]},
+    {"level":6,"name":"Create","description":"Produce new or original work","verbs":["create","design","develop","formulate","build","propose","invent","compose","plan","produce","construct"]}
+  ]
+}

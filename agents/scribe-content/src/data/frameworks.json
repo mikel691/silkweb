@@ -1,0 +1,42 @@
+{
+  "AIDA": {
+    "name": "Attention-Interest-Desire-Action",
+    "stages": ["Attention: Hook with a bold statement or question", "Interest: Present the problem and why it matters", "Desire: Show the solution and its benefits", "Action: Clear call-to-action"],
+    "bestFor": ["sales pages", "email campaigns", "ads"]
+  },
+  "PAS": {
+    "name": "Problem-Agitate-Solution",
+    "stages": ["Problem: Identify the reader's pain point", "Agitate: Amplify the problem and its consequences", "Solution: Present your product/service as the answer"],
+    "bestFor": ["landing pages", "cold emails", "social ads"]
+  },
+  "BAB": {
+    "name": "Before-After-Bridge",
+    "stages": ["Before: Describe the current situation/problem", "After: Paint the picture of life after the solution", "Bridge: Show how your product/service gets them there"],
+    "bestFor": ["case studies", "testimonials", "product descriptions"]
+  },
+  "FAB": {
+    "name": "Features-Advantages-Benefits",
+    "stages": ["Features: List what the product does", "Advantages: Explain why each feature matters", "Benefits: Describe the real-world impact for the user"],
+    "bestFor": ["product descriptions", "spec sheets", "comparison pages"]
+  },
+  "PASTOR": {
+    "name": "Problem-Amplify-Story-Transformation-Offer-Response",
+    "stages": ["Problem: Identify the reader's problem", "Amplify: Make the consequences vivid", "Story: Share a relatable narrative", "Transformation: Show the change", "Offer: Present your solution", "Response: Ask for action"],
+    "bestFor": ["long-form sales", "webinar scripts", "launches"]
+  },
+  "4Ps": {
+    "name": "Promise-Picture-Proof-Push",
+    "stages": ["Promise: Make a compelling promise", "Picture: Help them visualize the outcome", "Proof: Provide evidence and social proof", "Push: Give them a reason to act now"],
+    "bestFor": ["landing pages", "ads", "email campaigns"]
+  },
+  "QUEST": {
+    "name": "Qualify-Understand-Educate-Stimulate-Transition",
+    "stages": ["Qualify: Identify your target audience", "Understand: Show empathy for their situation", "Educate: Teach them something valuable", "Stimulate: Create excitement", "Transition: Guide to the next step"],
+    "bestFor": ["blog posts", "educational content", "nurture emails"]
+  },
+  "SSS": {
+    "name": "Star-Story-Solution",
+    "stages": ["Star: Introduce the main character (customer/product)", "Story: Tell the journey with challenges", "Solution: Reveal the happy ending with your product"],
+    "bestFor": ["case studies", "testimonials", "about pages"]
+  }
+}

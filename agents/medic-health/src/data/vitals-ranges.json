@@ -1,0 +1,10 @@
+{
+  "systolic_bp": {"unit":"mmHg","low":90,"normal_low":90,"normal_high":120,"elevated":130,"high":140,"critical_low":70,"critical_high":180,"label":"Systolic Blood Pressure"},
+  "diastolic_bp": {"unit":"mmHg","low":60,"normal_low":60,"normal_high":80,"elevated":85,"high":90,"critical_low":40,"critical_high":120,"label":"Diastolic Blood Pressure"},
+  "heart_rate": {"unit":"bpm","low":60,"normal_low":60,"normal_high":100,"elevated":110,"high":120,"critical_low":40,"critical_high":150,"label":"Heart Rate"},
+  "temperature": {"unit":"°F","low":97.0,"normal_low":97.8,"normal_high":99.1,"elevated":100.4,"high":102.0,"critical_low":95.0,"critical_high":104.0,"label":"Body Temperature"},
+  "spo2": {"unit":"%","low":95,"normal_low":95,"normal_high":100,"elevated":null,"high":null,"critical_low":90,"critical_high":null,"label":"Oxygen Saturation"},
+  "bmi": {"unit":"kg/m²","underweight":18.5,"normal_low":18.5,"normal_high":24.9,"overweight":29.9,"obese":30.0,"critical_low":15.0,"critical_high":45.0,"label":"Body Mass Index"},
+  "respiratory_rate": {"unit":"breaths/min","low":12,"normal_low":12,"normal_high":20,"elevated":24,"high":28,"critical_low":8,"critical_high":35,"label":"Respiratory Rate"},
+  "blood_glucose_fasting": {"unit":"mg/dL","low":70,"normal_low":70,"normal_high":100,"elevated":125,"high":126,"critical_low":54,"critical_high":400,"label":"Fasting Blood Glucose"}
+}

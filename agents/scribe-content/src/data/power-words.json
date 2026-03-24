@@ -1,0 +1,9 @@
+{
+  "urgency": ["now", "hurry", "instant", "immediately", "fast", "quick", "limited", "deadline", "last chance", "running out", "before", "soon", "act", "don't miss", "today only"],
+  "exclusivity": ["exclusive", "secret", "insider", "members-only", "VIP", "private", "elite", "limited edition", "invitation", "rare", "unlock", "hidden", "classified", "premium", "behind-the-scenes"],
+  "trust": ["proven", "guaranteed", "certified", "authentic", "tested", "verified", "backed", "endorsed", "trusted", "reliable", "secure", "official", "research-backed", "evidence-based", "award-winning"],
+  "emotion": ["amazing", "incredible", "breakthrough", "stunning", "powerful", "remarkable", "extraordinary", "game-changing", "revolutionary", "mind-blowing", "spectacular", "phenomenal", "jaw-dropping", "life-changing", "transformative"],
+  "value": ["free", "bonus", "save", "discount", "deal", "bargain", "value", "affordable", "cost-effective", "economical", "profitable", "ROI", "investment", "priceless", "complimentary"],
+  "authority": ["expert", "authority", "leader", "pioneer", "master", "professional", "specialist", "industry-leading", "cutting-edge", "state-of-the-art", "world-class", "best-in-class", "top-rated", "flagship", "definitive"],
+  "curiosity": ["discover", "reveal", "uncover", "explore", "imagine", "what if", "surprising", "unexpected", "little-known", "mystery", "finally", "truth about", "why", "how", "secret to"]
+}

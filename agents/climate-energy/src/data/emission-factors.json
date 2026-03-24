@@ -1,0 +1,72 @@
+{
+  "electricity": {
+    "unit": "kWh",
+    "factor": 0.417,
+    "factorUnit": "kg CO2e/kWh",
+    "source": "EPA eGRID US average 2023",
+    "byRegion": {
+      "northeast": 0.280, "southeast": 0.450, "midwest": 0.520, "southwest": 0.380,
+      "west": 0.250, "northwest": 0.180, "california": 0.210, "texas": 0.400,
+      "florida": 0.420, "new_york": 0.250
+    }
+  },
+  "natural_gas": {
+    "unit": "therms",
+    "factor": 5.3,
+    "factorUnit": "kg CO2e/therm",
+    "source": "EPA GHG Emission Factors Hub"
+  },
+  "gasoline": {
+    "unit": "gallons",
+    "factor": 8.887,
+    "factorUnit": "kg CO2e/gallon",
+    "source": "EPA GHG Emission Factors Hub"
+  },
+  "diesel": {
+    "unit": "gallons",
+    "factor": 10.180,
+    "factorUnit": "kg CO2e/gallon",
+    "source": "EPA GHG Emission Factors Hub"
+  },
+  "vehicle_miles": {
+    "unit": "miles",
+    "factor": 0.404,
+    "factorUnit": "kg CO2e/mile",
+    "source": "EPA average passenger vehicle",
+    "byType": {
+      "car_small": 0.320, "car_medium": 0.370, "car_large": 0.450, "suv": 0.480,
+      "pickup_truck": 0.520, "hybrid": 0.200, "electric": 0.100, "motorcycle": 0.180,
+      "bus": 0.089, "train": 0.041
+    }
+  },
+  "flights": {
+    "unit": "miles",
+    "factorUnit": "kg CO2e/passenger-mile",
+    "short_haul": 0.255,
+    "medium_haul": 0.156,
+    "long_haul": 0.150,
+    "source": "DEFRA 2023",
+    "classMultipliers": { "economy": 1.0, "premium_economy": 1.6, "business": 2.9, "first": 4.0 }
+  },
+  "waste": {
+    "landfill": { "unit": "short tons", "factor": 583, "factorUnit": "kg CO2e/short ton" },
+    "recycled": { "unit": "short tons", "factor": -185, "factorUnit": "kg CO2e/short ton (avoided)" },
+    "composted": { "unit": "short tons", "factor": -42, "factorUnit": "kg CO2e/short ton (avoided)" }
+  },
+  "water": {
+    "unit": "gallons",
+    "factor": 0.00272,
+    "factorUnit": "kg CO2e/gallon",
+    "source": "WaterSense/EPA estimate"
+  },
+  "propane": {
+    "unit": "gallons",
+    "factor": 5.72,
+    "factorUnit": "kg CO2e/gallon"
+  },
+  "fuel_oil": {
+    "unit": "gallons",
+    "factor": 10.16,
+    "factorUnit": "kg CO2e/gallon"
+  }
+}

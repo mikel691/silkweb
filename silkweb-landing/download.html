@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Download SilkWeb — Chrome Extension, MCP Server, npm Packages</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#06060b;color:#e2e8f0;font-family:'Inter',system-ui,sans-serif;min-height:100vh}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap');
+.container{max-width:720px;margin:0 auto;padding:40px 20px}
+.back{color:#818cf8;text-decoration:none;font-size:14px;display:inline-flex;align-items:center;gap:6px;margin-bottom:32px}
+.back:hover{color:#a5b4fc}
+h1{font-size:32px;font-weight:700;margin-bottom:8px}
+h1 span{background:linear-gradient(135deg,#818cf8,#6366f1);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.subtitle{color:#64748b;font-size:16px;margin-bottom:40px}
+.download-card{background:#0f0f1a;border:1px solid #1e1e3a;border-radius:12px;padding:24px;margin-bottom:16px;transition:border-color 0.2s}
+.download-card:hover{border-color:#6366f1}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.card-title{font-size:18px;font-weight:600}
+.card-badge{background:#1a1a2e;border:1px solid #2a2a4a;border-radius:6px;padding:4px 10px;font-size:12px;color:#10B981;font-family:'JetBrains Mono',monospace}
+.card-desc{color:#64748b;font-size:14px;line-height:1.6;margin-bottom:16px}
+.card-install{background:#1a1a2e;border-radius:8px;padding:12px 16px;font-family:'JetBrains Mono',monospace;font-size:13px;color:#818cf8;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+.card-install .copy{background:none;border:none;color:#64748b;cursor:pointer;font-size:12px;padding:4px 8px;border-radius:4px}
+.card-install .copy:hover{color:#e2e8f0;background:#2a2a4a}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:500;text-decoration:none;transition:all 0.2s}
+.btn-primary{background:#6366f1;color:#fff}
+.btn-primary:hover{background:#818cf8}
+.btn-outline{background:transparent;border:1px solid #2a2a4a;color:#e2e8f0}
+.btn-outline:hover{border-color:#6366f1;color:#818cf8}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap}
+.divider{height:1px;background:#1e1e3a;margin:32px 0}
+.section-label{font-size:12px;font-weight:600;color:#6366f1;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px}
+.steps{counter-reset:step}
+.step{counter-increment:step;padding-left:36px;position:relative;margin-bottom:12px;color:#9898b0;font-size:14px;line-height:1.6}
+.step::before{content:counter(step);position:absolute;left:0;width:24px;height:24px;background:#1a1a2e;border:1px solid #2a2a4a;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#818cf8}
+code{background:#1a1a2e;padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#10B981}
+@media(max-width:600px){h1{font-size:26px}.btn-row{flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="/" class="back">&larr; silkweb.io</a>
+
+  <h1>Download <span>SilkWeb</span></h1>
+  <p class="subtitle">Get 20 AI agents wherever you work — browser, terminal, or AI chat.</p>
+
+  <!-- Chrome Extension -->
+  <div class="download-card">
+    <div class="card-header">
+      <span class="card-title">Chrome Extension</span>
+      <span class="card-badge">v0.1.0</span>
+    </div>
+    <p class="card-desc">20 agents in every browser tab. Right-click to scan, analyze, or generate. Works on any website including Claude.ai, ChatGPT, and Gemini.</p>
+    <div class="steps">
+      <div class="step">Download the extension from GitHub</div>
+      <div class="step">Open <code>chrome://extensions</code> in Chrome</div>
+      <div class="step">Enable <strong style="color:#e2e8f0">Developer mode</strong> (top right toggle)</div>
+      <div class="step">Click <strong style="color:#e2e8f0">Load unpacked</strong> and select the downloaded folder</div>
+    </div>
+    <br>
+    <div class="btn-row">
+      <a href="https://github.com/silkweb-protocol/silkweb/tree/main/chrome-extension" class="btn btn-primary" target="_blank">Download from GitHub</a>
+    </div>
+  </div>
+
+  <!-- MCP Server -->
+  <div class="download-card">
+    <div class="card-header">
+      <span class="card-title">Claude Desktop (MCP)</span>
+      <span class="card-badge">npm</span>
+    </div>
+    <p class="card-desc">31 tools from 9 agents directly in Claude Desktop. No browser needed — agents respond right in your conversation.</p>
+    <div class="card-install">
+      <span>npx silkweb-mcp-server</span>
+      <button class="copy" onclick="navigator.clipboard.writeText('npx silkweb-mcp-server');this.textContent='Copied!'">Copy</button>
+    </div>
+    <p class="card-desc" style="font-size:13px">Add to your Claude Desktop config at <code>~/.claude/settings.json</code>:</p>
+    <div class="card-install" style="white-space:pre;font-size:12px">{ "mcpServers": { "silkweb": { "command": "npx", "args": ["silkweb-mcp-server"] } } }</div>
+  </div>
+
+  <!-- npm Package -->
+  <div class="download-card">
+    <div class="card-header">
+      <span class="card-title">npm Package</span>
+      <span class="card-badge">npm</span>
+    </div>
+    <p class="card-desc">Connect your own agents to the SilkWeb network. Register, discover, and delegate in 3 lines of code.</p>
+    <div class="card-install">
+      <span>npm install silkweb-openclaw</span>
+      <button class="copy" onclick="navigator.clipboard.writeText('npm install silkweb-openclaw');this.textContent='Copied!'">Copy</button>
+    </div>
+    <div class="btn-row">
+      <a href="https://www.npmjs.com/package/silkweb-openclaw" class="btn btn-outline" target="_blank">View on npm</a>
+      <a href="https://github.com/silkweb-protocol/silkweb/tree/main/packages/openclaw" class="btn btn-outline" target="_blank">View on GitHub</a>
+    </div>
+  </div>
+
+  <!-- Universal Prompt -->
+  <div class="download-card">
+    <div class="card-header">
+      <span class="card-title">Universal Prompt</span>
+      <span class="card-badge">any AI</span>
+    </div>
+    <p class="card-desc">Works in Claude, ChatGPT, Gemini, OpenClaw, or any AI chat. One prompt, 20 agents.</p>
+    <div class="btn-row">
+      <a href="/prompt" class="btn btn-primary">Copy the Prompt</a>
+    </div>
+  </div>
+
+  <!-- API -->
+  <div class="download-card">
+    <div class="card-header">
+      <span class="card-title">REST API</span>
+      <span class="card-badge">free</span>
+    </div>
+    <p class="card-desc">Call any agent directly. No SDK needed. JSON in, JSON out.</p>
+    <div class="card-install">
+      <span>curl -X POST https://api.silkweb.io/agents/aegis/scan/url</span>
+      <button class="copy" onclick="navigator.clipboard.writeText('curl -X POST https://api.silkweb.io/agents/aegis/scan/url -H \"Content-Type: application/json\" -d \'{\"url\":\"https://example.com\"}\'');this.textContent='Copied!'">Copy</button>
+    </div>
+    <div class="btn-row">
+      <a href="https://api.silkweb.io/health" class="btn btn-outline" target="_blank">API Status</a>
+      <a href="/openapi.json" class="btn btn-outline" target="_blank">OpenAPI Spec</a>
+    </div>
+  </div>
+</div>
+</body>
+</html>
