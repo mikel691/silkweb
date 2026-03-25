@@ -68,7 +68,9 @@ def compute_tier(agent: Agent) -> tuple[str, Decimal]:
     # Calculate age in days
     now = datetime.now(timezone.utc)
     created = agent.created_at
-    if created.tzinfo is None:
+    if created is None:
+        created = now
+    elif created.tzinfo is None:
         created = created.replace(tzinfo=timezone.utc)
     age_days = (now - created).days
 
@@ -124,7 +126,9 @@ def next_tier_requirements(agent: Agent) -> dict | None:
     tasks = agent.tasks_completed or 0
     now = datetime.now(timezone.utc)
     created = agent.created_at
-    if created.tzinfo is None:
+    if created is None:
+        created = now
+    elif created.tzinfo is None:
         created = created.replace(tzinfo=timezone.utc)
     age_days = (now - created).days
 
