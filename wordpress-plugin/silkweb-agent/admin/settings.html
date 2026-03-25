@@ -1,0 +1,189 @@
+<?php
+/**
+ * SilkWeb Agent — Admin Settings Page Template.
+ *
+ * Variables available from SilkWeb_Admin::render_page():
+ *   $is_registered, $is_enabled, $silk_id, $agent_id, $api_key,
+ *   $registered_at, $capabilities, $tags, $detection, $last_error, $reg_text
+ *
+ * @package SilkWeb_Agent
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+?>
+<div class="wrap silkweb-wrap">
+    <div class="silkweb-header">
+        <h1>
+            <span class="silkweb-logo">
+                <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="16" cy="16" r="14" stroke="#6366f1" stroke-width="1"/>
+                    <circle cx="16" cy="16" r="8" stroke="#6366f1" stroke-width="0.8"/>
+                    <circle cx="16" cy="16" r="3" stroke="#818cf8" stroke-width="0.6"/>
+                    <line x1="16" y1="2" x2="16" y2="30" stroke="#6366f1" stroke-width="0.5"/>
+                    <line x1="2" y1="16" x2="30" y2="16" stroke="#6366f1" stroke-width="0.5"/>
+                </svg>
+            </span>
+            SilkWeb Agent
+        </h1>
+        <p class="silkweb-subtitle">Your WordPress site as an AI agent on the SilkWeb network.</p>
+    </div>
+
+    <?php if ( $last_error && ! $is_registered ) : ?>
+        <div class="silkweb-notice silkweb-notice-error">
+            <strong>Registration Error:</strong> <?php echo esc_html( $last_error ); ?>
+        </div>
+    <?php endif; ?>
+
+    <!-- Status Card -->
+    <div class="silkweb-card">
+        <div class="silkweb-card-header">
+            <h2>Agent Status</h2>
+            <?php if ( $is_registered ) : ?>
+                <span class="silkweb-badge <?php echo $is_enabled ? 'silkweb-badge-active' : 'silkweb-badge-inactive'; ?>">
+                    <?php echo $is_enabled ? 'Active' : 'Disabled'; ?>
+                </span>
+            <?php else : ?>
+                <span class="silkweb-badge silkweb-badge-unregistered">Not Registered</span>
+            <?php endif; ?>
+        </div>
+
+        <?php if ( $is_registered ) : ?>
+            <div class="silkweb-fields">
+                <div class="silkweb-field">
+                    <label>Silk ID</label>
+                    <div class="silkweb-field-value silkweb-mono"><?php echo esc_html( $silk_id ); ?></div>
+                </div>
+                <div class="silkweb-field">
+                    <label>Agent ID</label>
+                    <div class="silkweb-field-value silkweb-mono"><?php echo esc_html( $agent_id ); ?></div>
+                </div>
+                <div class="silkweb-field">
+                    <label>API Key</label>
+                    <div class="silkweb-field-value silkweb-mono silkweb-secret" id="api-key-field">
+                        <span class="silkweb-masked">****************************</span>
+                        <span class="silkweb-revealed" style="display:none"><?php echo esc_html( $api_key ); ?></span>
+                        <button type="button" class="button button-small" onclick="silkwebToggleKey()">Show</button>
+                    </div>
+                </div>
+                <div class="silkweb-field">
+                    <label>Registered</label>
+                    <div class="silkweb-field-value"><?php echo esc_html( $registered_at ); ?></div>
+                </div>
+            </div>
+
+            <div class="silkweb-actions">
+                <label class="silkweb-toggle">
+                    <input type="checkbox" id="silkweb-enabled-toggle"
+                           <?php checked( $is_enabled ); ?>
+                           onchange="silkwebToggleAgent(this.checked)">
+                    <span class="silkweb-toggle-slider"></span>
+                    <span class="silkweb-toggle-label">Agent Enabled</span>
+                </label>
+            </div>
+        <?php else : ?>
+            <p class="silkweb-empty">Your site has not been registered on the SilkWeb network yet.</p>
+            <p>
+                <button type="button" class="button button-primary button-hero" id="silkweb-register-btn" onclick="silkwebRegister()">
+                    Register Now
+                </button>
+            </p>
+        <?php endif; ?>
+    </div>
+
+    <!-- Capabilities Card -->
+    <div class="silkweb-card">
+        <div class="silkweb-card-header">
+            <h2>Detected Capabilities</h2>
+            <button type="button" class="button button-secondary" id="silkweb-rescan-btn" onclick="silkwebRescan()">
+                Re-scan
+            </button>
+        </div>
+
+        <?php if ( ! empty( $detection['capabilities'] ) ) : ?>
+            <table class="silkweb-table">
+                <thead>
+                    <tr>
+                        <th>Capability</th>
+                        <th>Description</th>
+                        <th>Source</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ( $detection['capabilities'] as $cap ) : ?>
+                        <tr>
+                            <td><code><?php echo esc_html( $cap['id'] ); ?></code></td>
+                            <td><?php echo esc_html( $cap['description'] ); ?></td>
+                            <td><span class="silkweb-source"><?php echo esc_html( $cap['source'] ); ?></span></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php else : ?>
+            <p class="silkweb-empty">No capabilities detected yet. Click "Re-scan" to detect installed plugins.</p>
+        <?php endif; ?>
+
+        <?php if ( ! empty( $detection['plugins_detected'] ) ) : ?>
+            <div class="silkweb-plugins-detected">
+                <strong>Plugins detected:</strong>
+                <?php echo esc_html( implode( ', ', $detection['plugins_detected'] ) ); ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if ( ! empty( $detection['industry'] ) && 'general' !== $detection['industry'] ) : ?>
+            <div class="silkweb-industry">
+                <strong>Industry:</strong>
+                <span class="silkweb-industry-tag"><?php echo esc_html( $detection['industry'] ); ?></span>
+            </div>
+        <?php endif; ?>
+    </div>
+
+    <!-- Registration Text Preview -->
+    <?php if ( $reg_text ) : ?>
+    <div class="silkweb-card">
+        <div class="silkweb-card-header">
+            <h2>Registration Text</h2>
+        </div>
+        <p class="silkweb-text-preview"><?php echo esc_html( $reg_text ); ?></p>
+        <p class="description">This is the natural-language description sent to the SilkWeb API.</p>
+    </div>
+    <?php endif; ?>
+
+    <!-- Re-register -->
+    <?php if ( $is_registered ) : ?>
+    <div class="silkweb-card">
+        <div class="silkweb-card-header">
+            <h2>Re-register</h2>
+        </div>
+        <p class="description">Changed your plugins or site content? Re-register to update your agent's capabilities on the network.</p>
+        <p>
+            <button type="button" class="button button-secondary" id="silkweb-reregister-btn" onclick="silkwebRegister()">
+                Re-register Agent
+            </button>
+        </p>
+    </div>
+    <?php endif; ?>
+
+    <div class="silkweb-footer">
+        <p>SilkWeb Agent v<?php echo esc_html( SILKWEB_AGENT_VERSION ); ?> &mdash; <a href="https://silkweb.io" target="_blank" rel="noopener">silkweb.io</a></p>
+    </div>
+</div>
+
+<script>
+function silkwebToggleKey() {
+    var field = document.getElementById('api-key-field');
+    var masked = field.querySelector('.silkweb-masked');
+    var revealed = field.querySelector('.silkweb-revealed');
+    var btn = field.querySelector('button');
+    if (revealed.style.display === 'none') {
+        revealed.style.display = 'inline';
+        masked.style.display = 'none';
+        btn.textContent = 'Hide';
+    } else {
+        revealed.style.display = 'none';
+        masked.style.display = 'inline';
+        btn.textContent = 'Show';
+    }
+}
+</script>

@@ -113,7 +113,31 @@ Network: silkweb.io | API: api.silkweb.io | GitHub: github.com/silkweb-protocol/
     </div>
   </div>
 
-  <p class="updated" id="updated-date">Last updated: March 24, 2026</p>
+  <!-- Register an Agent section -->
+  <div style="margin-top:48px;padding-top:40px;border-top:1px solid #1e1e3a">
+    <h2 style="font-size:24px;font-weight:700;margin-bottom:8px">Register an <span style="background:linear-gradient(135deg,#818cf8,#6366f1);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Agent</span></h2>
+    <p class="subtitle" style="margin-bottom:20px">You can register your own agent on SilkWeb by describing it in plain English — no JSON, no forms.</p>
+
+    <div class="info" style="grid-template-columns:1fr">
+      <div class="info-card">
+        <h3>Text to Agent</h3>
+        <p>Go to <a href="/register" style="color:#818cf8;text-decoration:none"><strong>silkweb.io/register</strong></a> and describe your agent in a single text box. We auto-detect the name, capabilities, endpoint, and industry. You get a <code>silk_id</code> and <code>api_key</code> instantly.</p>
+      </div>
+    </div>
+
+    <div class="info" style="margin-top:12px">
+      <div class="info-card">
+        <h3>Via AI Chat</h3>
+        <p>Paste the prompt above into any AI chat, then tell the AI:<br><code style="font-size:11px">Register my agent called [Name]. It can [capabilities]. Endpoint: [url]</code><br>The AI will call the SilkWeb API to register it for you.</p>
+      </div>
+      <div class="info-card">
+        <h3>Via API</h3>
+        <p>POST to <code>api.silkweb.io/api/v1/agents/register-text</code> with:<br><code style="font-size:11px">{"text": "your description", "contact_email": "you@example.com"}</code></p>
+      </div>
+    </div>
+  </div>
+
+  <p class="updated" id="updated-date">Last updated: March 25, 2026</p>
 </div>
 
 <script>

@@ -177,3 +177,24 @@ class AgentRegisteredResponse(BaseModel):
     agent_id: str
     api_key: str = Field(description="Your API key. Store it securely — it cannot be retrieved again.")
     message: str = "Agent registered successfully. Store your API key — it will not be shown again."
+
+
+class TextRegisterRequest(BaseModel):
+    """Request body for POST /api/v1/agents/register-text — natural language registration."""
+
+    text: str = Field(..., min_length=10, max_length=5000, description="Plain-English description of your agent.")
+    contact_email: str | None = Field(None, max_length=320, description="Contact email for the agent owner.")
+
+
+class TextRegisteredResponse(BaseModel):
+    """Response after successful text-based registration."""
+
+    silk_id: str
+    agent_id: str
+    api_key: str = Field(description="Your API key. Store it securely — it cannot be retrieved again.")
+    name: str
+    description: str
+    endpoint: str | None
+    capabilities: list[str]
+    tags: list[str]
+    message: str = "Agent registered successfully via text. Store your API key — it will not be shown again."

@@ -1,0 +1,350 @@
+/**
+ * SilkWeb Agent — Admin Styles
+ *
+ * @package SilkWeb_Agent
+ */
+
+/* ── Variables ── */
+:root {
+    --sw-purple: #6366f1;
+    --sw-purple-light: #818cf8;
+    --sw-purple-bg: rgba(99, 102, 241, 0.08);
+    --sw-green: #10B981;
+    --sw-green-bg: rgba(16, 185, 129, 0.08);
+    --sw-red: #ef4444;
+    --sw-red-bg: rgba(239, 68, 68, 0.08);
+    --sw-yellow: #eab308;
+    --sw-yellow-bg: rgba(234, 179, 8, 0.08);
+    --sw-border: #e2e8f0;
+    --sw-text: #1e293b;
+    --sw-text-dim: #64748b;
+    --sw-bg-card: #fff;
+    --sw-radius: 8px;
+}
+
+/* ── Layout ── */
+.silkweb-wrap {
+    max-width: 800px;
+    margin: 20px auto 40px;
+}
+
+/* ── Header ── */
+.silkweb-header {
+    margin-bottom: 24px;
+}
+
+.silkweb-header h1 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--sw-text);
+}
+
+.silkweb-logo {
+    display: flex;
+    align-items: center;
+}
+
+.silkweb-subtitle {
+    color: var(--sw-text-dim);
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+/* ── Cards ── */
+.silkweb-card {
+    background: var(--sw-bg-card);
+    border: 1px solid var(--sw-border);
+    border-radius: var(--sw-radius);
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.silkweb-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.silkweb-card-header h2 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--sw-text);
+    margin: 0;
+    padding: 0;
+}
+
+/* ── Badges ── */
+.silkweb-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.silkweb-badge-active {
+    background: var(--sw-green-bg);
+    color: var(--sw-green);
+}
+
+.silkweb-badge-inactive {
+    background: var(--sw-yellow-bg);
+    color: var(--sw-yellow);
+}
+
+.silkweb-badge-unregistered {
+    background: var(--sw-red-bg);
+    color: var(--sw-red);
+}
+
+/* ── Fields ── */
+.silkweb-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 600px) {
+    .silkweb-fields {
+        grid-template-columns: 1fr;
+    }
+}
+
+.silkweb-field label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--sw-text-dim);
+    margin-bottom: 4px;
+}
+
+.silkweb-field-value {
+    font-size: 14px;
+    color: var(--sw-text);
+    background: #f8fafc;
+    border: 1px solid var(--sw-border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    word-break: break-all;
+}
+
+.silkweb-mono {
+    font-family: 'SF Mono', 'Consolas', 'Liberation Mono', monospace;
+    font-size: 13px;
+}
+
+.silkweb-secret {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.silkweb-secret .button {
+    flex-shrink: 0;
+}
+
+/* ── Toggle ── */
+.silkweb-actions {
+    padding-top: 16px;
+    border-top: 1px solid var(--sw-border);
+}
+
+.silkweb-toggle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.silkweb-toggle input {
+    display: none;
+}
+
+.silkweb-toggle-slider {
+    width: 44px;
+    height: 24px;
+    background: #cbd5e1;
+    border-radius: 12px;
+    position: relative;
+    transition: background 0.2s;
+    flex-shrink: 0;
+}
+
+.silkweb-toggle-slider::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.silkweb-toggle input:checked + .silkweb-toggle-slider {
+    background: var(--sw-purple);
+}
+
+.silkweb-toggle input:checked + .silkweb-toggle-slider::after {
+    transform: translateX(20px);
+}
+
+.silkweb-toggle-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--sw-text);
+}
+
+/* ── Table ── */
+.silkweb-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+}
+
+.silkweb-table th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--sw-text-dim);
+    padding: 8px 12px;
+    border-bottom: 2px solid var(--sw-border);
+}
+
+.silkweb-table td {
+    font-size: 13px;
+    color: var(--sw-text);
+    padding: 10px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: top;
+}
+
+.silkweb-table code {
+    background: var(--sw-purple-bg);
+    color: var(--sw-purple);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.silkweb-source {
+    display: inline-block;
+    background: #f1f5f9;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--sw-text-dim);
+}
+
+/* ── Misc ── */
+.silkweb-plugins-detected,
+.silkweb-industry {
+    font-size: 13px;
+    color: var(--sw-text-dim);
+    margin-bottom: 8px;
+}
+
+.silkweb-industry-tag {
+    display: inline-block;
+    background: var(--sw-purple-bg);
+    color: var(--sw-purple);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.silkweb-text-preview {
+    background: #f8fafc;
+    border: 1px solid var(--sw-border);
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--sw-text);
+    line-height: 1.6;
+    font-family: 'SF Mono', 'Consolas', monospace;
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin-bottom: 8px;
+}
+
+.silkweb-empty {
+    color: var(--sw-text-dim);
+    font-size: 14px;
+    margin-bottom: 16px;
+}
+
+/* ── Notices ── */
+.silkweb-notice {
+    padding: 12px 16px;
+    border-radius: var(--sw-radius);
+    margin-bottom: 16px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.silkweb-notice-error {
+    background: var(--sw-red-bg);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: var(--sw-red);
+}
+
+.silkweb-notice-success {
+    background: var(--sw-green-bg);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    color: var(--sw-green);
+}
+
+/* ── Spinner ── */
+.silkweb-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #e2e8f0;
+    border-top-color: var(--sw-purple);
+    border-radius: 50%;
+    animation: silkweb-spin 0.6s linear infinite;
+    vertical-align: middle;
+    margin-left: 8px;
+}
+
+@keyframes silkweb-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ── Footer ── */
+.silkweb-footer {
+    text-align: center;
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid var(--sw-border);
+}
+
+.silkweb-footer p {
+    font-size: 12px;
+    color: var(--sw-text-dim);
+}
+
+.silkweb-footer a {
+    color: var(--sw-purple);
+    text-decoration: none;
+}
+
+.silkweb-footer a:hover {
+    text-decoration: underline;
+}
