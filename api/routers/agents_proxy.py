@@ -42,6 +42,17 @@ AGENT_PORTS: dict[str, int] = {
     "shield": 3009,
     "fortress": 3010,
     "design": 3002,
+    "medic": 3012,
+    "architect": 3013,
+    "broker": 3014,
+    "scribe": 3015,
+    "phantom": 3016,
+    "diplomat": 3017,
+    "merchant": 3018,
+    "tutor": 3019,
+    "climate": 3020,
+    "signal": 3021,
+    "forge": 3022,
 }
 
 AGENT_METADATA: dict[str, dict[str, str]] = {
@@ -86,9 +97,64 @@ AGENT_METADATA: dict[str, dict[str, str]] = {
         "description": "Criminal Defense Intelligence — charge analysis, constitutional rights, evidence suppression, sentencing guidelines",
     },
     "design": {
-        "id": "sphinx-design",
-        "name": "SPHINX",
-        "description": "Design Intelligence Agent",
+        "id": "design-agent",
+        "name": "DESIGN",
+        "description": "Design Intelligence — social cards, code screenshots, hero images, infographics, receipts",
+    },
+    "medic": {
+        "id": "medic-health",
+        "name": "MEDIC",
+        "description": "Healthcare Intelligence — symptom analysis, drug interactions, vitals assessment, HIPAA compliance",
+    },
+    "architect": {
+        "id": "architect-code",
+        "name": "ARCHITECT",
+        "description": "Code & DevOps — code review, dependency audit, architecture analysis, tech debt scoring",
+    },
+    "broker": {
+        "id": "broker-realestate",
+        "name": "BROKER",
+        "description": "Real Estate Intelligence — property valuation, ROI calculator, market analysis, comparables",
+    },
+    "scribe": {
+        "id": "scribe-content",
+        "name": "SCRIBE",
+        "description": "Content & Copy — blog outlines, email campaigns, product descriptions, social posts, readability",
+    },
+    "phantom": {
+        "id": "phantom-osint",
+        "name": "PHANTOM",
+        "description": "OSINT & Investigation — domain intel, email investigation, header tracing, digital footprint",
+    },
+    "diplomat": {
+        "id": "diplomat-hr",
+        "name": "DIPLOMAT",
+        "description": "HR & Compliance — job analysis, salary benchmarking, policy review, labor law",
+    },
+    "merchant": {
+        "id": "merchant-ecommerce",
+        "name": "MERCHANT",
+        "description": "E-Commerce Intelligence — listing optimization, pricing strategy, inventory forecasting",
+    },
+    "tutor": {
+        "id": "tutor-education",
+        "name": "TUTOR",
+        "description": "Education — curriculum generation, quiz creation, flashcards, skill assessment",
+    },
+    "climate": {
+        "id": "climate-energy",
+        "name": "CLIMATE",
+        "description": "Sustainability — carbon calculator, energy audit, ESG scoring, renewable feasibility",
+    },
+    "signal": {
+        "id": "signal-comms",
+        "name": "SIGNAL",
+        "description": "Communications & PR — press releases, crisis response, press kits, talking points",
+    },
+    "forge": {
+        "id": "forge-manufacturing",
+        "name": "FORGE",
+        "description": "Manufacturing — BOM analysis, supplier scoring, production optimization, quality control",
     },
 }
 
