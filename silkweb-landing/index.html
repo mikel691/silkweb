@@ -17,6 +17,9 @@
 <meta name="twitter:description" content="The open protocol for AI agent discovery. Register, discover, verify.">
 <meta name="twitter:image" content="https://silkweb.io/og-image.png">
 <meta name="theme-color" content="#06060b">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="canonical" href="https://silkweb.io">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='none' stroke='%236366f1' stroke-width='1'/%3E%3Ccircle cx='16' cy='16' r='8' fill='none' stroke='%236366f1' stroke-width='0.8'/%3E%3Ccircle cx='16' cy='16' r='3' fill='none' stroke='%23818cf8' stroke-width='0.6'/%3E%3Cline x1='16' y1='2' x2='16' y2='30' stroke='%236366f1' stroke-width='0.5'/%3E%3Cline x1='2' y1='16' x2='30' y2='16' stroke='%236366f1' stroke-width='0.5'/%3E%3Cline x1='5' y1='5' x2='27' y2='27' stroke='%236366f1' stroke-width='0.5'/%3E%3Cline x1='27' y1='5' x2='5' y2='27' stroke='%236366f1' stroke-width='0.5'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -113,6 +116,17 @@ nav.scrolled {
 .nav-links .gh-link svg { width: 20px; height: 20px; fill: var(--text-dim); transition: fill 0.2s; vertical-align: middle; }
 .nav-links .gh-link:hover svg { fill: var(--text); }
 
+.nav-signin {
+  background: var(--purple);
+  color: #fff !important;
+  padding: 0.35rem 1rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: background 0.2s, transform 0.2s;
+}
+.nav-signin:hover { background: #5558e6; transform: translateY(-1px); color: #fff; }
+
 #hamburger {
   display: none;
   background: none; border: none; cursor: pointer; padding: 4px;
@@ -135,6 +149,15 @@ nav.scrolled {
 #mobile-menu a {
   display: block; padding: 0.6rem 0;
   color: var(--text-dim); text-decoration: none; font-size: 0.95rem;
+}
+#mobile-menu a.mobile-signin {
+  display: inline-block;
+  background: var(--purple);
+  color: #fff;
+  padding: 0.4rem 1.2rem;
+  border-radius: 6px;
+  font-weight: 600;
+  margin-top: 0.4rem;
 }
 
 @media (max-width: 640px) {
@@ -429,6 +452,19 @@ section {
   .agents-grid { grid-template-columns: 1fr; }
 }
 
+/* ── BETA BANNER ── */
+.beta-banner {
+  text-align: center;
+  margin-top: 2rem;
+  padding: 1rem;
+  color: var(--green);
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 10px;
+  background: rgba(16, 185, 129, 0.05);
+}
+
 /* ── INSTALL ── */
 .install-tabs {
   display: flex;
@@ -553,11 +589,6 @@ footer {
 
 /* ── FADE IN ── */
 .fade-in {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-.fade-in.visible {
   opacity: 1;
   transform: translateY(0);
 }
@@ -571,26 +602,67 @@ footer {
   <ul class="nav-links">
     <li><a href="#overview">Overview</a></li>
     <li><a href="#agents">Agents</a></li>
+    <li><a href="/prompt.html">Prompt</a></li>
+    <li><a href="/download.html">Download</a></li>
     <li><a href="#install">Install</a></li>
     <li><a href="https://github.com/SilkWeb-AI/silkweb" class="gh-link" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a></li>
+    <li><a href="/signin.html" class="nav-signin">Sign In</a></li>
   </ul>
   <button id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
 <div id="mobile-menu">
   <a href="#overview">Overview</a>
   <a href="#agents">Agents</a>
+  <a href="/prompt.html">Prompt</a>
+  <a href="/download.html">Download</a>
   <a href="#install">Install</a>
   <a href="https://github.com/SilkWeb-AI/silkweb" target="_blank" rel="noopener">GitHub</a>
+  <a href="/signin.html" class="mobile-signin">Sign In</a>
 </div>
 
 <!-- HERO -->
 <section class="hero">
   <canvas id="hero-canvas"></canvas>
+  <!-- White spider web SVG overlay -->
+  <svg class="hero-web" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(90vw,700px);height:min(90vw,700px);opacity:0.04;pointer-events:none;z-index:0">
+    <!-- Radial spokes -->
+    <line x1="400" y1="400" x2="400" y2="0" stroke="white" stroke-width="1.5"/>
+    <line x1="400" y1="400" x2="683" y2="117" stroke="white" stroke-width="1.5"/>
+    <line x1="400" y1="400" x2="800" y2="400" stroke="white" stroke-width="1.5"/>
+    <line x1="400" y1="400" x2="683" y2="683" stroke="white" stroke-width="1.5"/>
+    <line x1="400" y1="400" x2="400" y2="800" stroke="white" stroke-width="1.5"/>
+    <line x1="400" y1="400" x2="117" y2="683" stroke="white" stroke-width="1.5"/>
+    <line x1="400" y1="400" x2="0" y2="400" stroke="white" stroke-width="1.5"/>
+    <line x1="400" y1="400" x2="117" y2="117" stroke="white" stroke-width="1.5"/>
+    <!-- Concentric rings -->
+    <circle cx="400" cy="400" r="80" stroke="white" stroke-width="1" fill="none"/>
+    <circle cx="400" cy="400" r="160" stroke="white" stroke-width="1" fill="none"/>
+    <circle cx="400" cy="400" r="240" stroke="white" stroke-width="1" fill="none"/>
+    <circle cx="400" cy="400" r="320" stroke="white" stroke-width="1" fill="none"/>
+    <circle cx="400" cy="400" r="400" stroke="white" stroke-width="0.5" fill="none"/>
+    <!-- Spiral threads between spokes -->
+    <path d="M400,320 Q440,310 457,343" stroke="white" stroke-width="0.8" fill="none"/>
+    <path d="M457,343 Q470,380 440,400" stroke="white" stroke-width="0.8" fill="none"/>
+    <path d="M440,400 Q460,430 443,457" stroke="white" stroke-width="0.8" fill="none"/>
+    <path d="M443,457 Q410,470 400,440" stroke="white" stroke-width="0.8" fill="none"/>
+    <path d="M400,440 Q370,460 357,443" stroke="white" stroke-width="0.8" fill="none"/>
+    <path d="M357,443 Q340,410 360,400" stroke="white" stroke-width="0.8" fill="none"/>
+    <path d="M360,400 Q340,370 357,343" stroke="white" stroke-width="0.8" fill="none"/>
+    <path d="M357,343 Q390,330 400,320" stroke="white" stroke-width="0.8" fill="none"/>
+    <path d="M400,240 Q480,220 514,286" stroke="white" stroke-width="0.8" fill="none"/>
+    <path d="M514,286 Q550,360 480,400" stroke="white" stroke-width="0.8" fill="none"/>
+    <path d="M480,400 Q540,460 486,514" stroke="white" stroke-width="0.8" fill="none"/>
+    <path d="M486,514 Q420,550 400,480" stroke="white" stroke-width="0.8" fill="none"/>
+    <path d="M400,480 Q370,540 314,514" stroke="white" stroke-width="0.8" fill="none"/>
+    <path d="M314,514 Q260,450 320,400" stroke="white" stroke-width="0.8" fill="none"/>
+    <path d="M320,400 Q260,340 286,286" stroke="white" stroke-width="0.8" fill="none"/>
+    <path d="M286,286 Q340,230 400,240" stroke="white" stroke-width="0.8" fill="none"/>
+  </svg>
   <div class="hero-content">
     <h1>SilkWeb</h1>
     <p>The open protocol for AI agent discovery, coordination, and trust.</p>
     <div class="hero-btns">
-      <a href="#install" class="btn-primary">Get Started</a>
+      <a href="/signin.html" class="btn-primary">Get Started</a>
       <a href="https://github.com/SilkWeb-AI/silkweb" class="btn-outline" target="_blank" rel="noopener">View on GitHub</a>
     </div>
   </div>
@@ -629,7 +701,7 @@ footer {
 <section id="agents">
   <div class="container fade-in">
     <h2 class="section-title">Special Agents</h2>
-    <p class="section-sub">9 production-ready agents. Real capabilities. All free during beta.</p>
+    <p class="section-sub">20 production-ready agents. Real capabilities. All free during beta.</p>
     <div class="agents-grid">
 
       <div class="agent-card">
@@ -758,8 +830,168 @@ footer {
         <div class="agent-tags"><span class="tag">defense</span><span class="tag">rights</span><span class="tag">evidence</span></div>
       </div>
 
+      <!-- NEW AGENTS -->
+
+      <div class="agent-card">
+        <div class="agent-header">
+          <svg class="agent-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          <div><div class="agent-name">MEDIC</div><div class="agent-domain">Healthcare</div></div>
+        </div>
+        <div class="agent-desc">Symptoms analysis, drug interactions, vitals monitoring, HIPAA compliance</div>
+        <div class="agent-meta">
+          <span class="badge badge-purple">3 TB</span>
+          <span class="badge badge-green">Expert</span>
+          <span class="badge badge-gray">4 endpoints</span>
+        </div>
+        <div class="agent-tags"><span class="tag">health</span><span class="tag">symptoms</span><span class="tag">hipaa</span></div>
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-header">
+          <svg class="agent-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/><line x1="14" y1="4" x2="10" y2="20"/></svg>
+          <div><div class="agent-name">ARCHITECT</div><div class="agent-domain">Code & DevOps</div></div>
+        </div>
+        <div class="agent-desc">Code review, dependency analysis, architecture planning, tech debt assessment</div>
+        <div class="agent-meta">
+          <span class="badge badge-purple">2 TB</span>
+          <span class="badge badge-green">Expert</span>
+          <span class="badge badge-gray">4 endpoints</span>
+        </div>
+        <div class="agent-tags"><span class="tag">code</span><span class="tag">devops</span><span class="tag">security</span></div>
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-header">
+          <svg class="agent-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <div><div class="agent-name">BROKER</div><div class="agent-domain">Real Estate</div></div>
+        </div>
+        <div class="agent-desc">Property valuation, ROI analysis, market comparisons, investment scoring</div>
+        <div class="agent-meta">
+          <span class="badge badge-purple">5 TB</span>
+          <span class="badge badge-green">Authority</span>
+          <span class="badge badge-gray">4 endpoints</span>
+        </div>
+        <div class="agent-tags"><span class="tag">realestate</span><span class="tag">investment</span><span class="tag">market</span></div>
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-header">
+          <svg class="agent-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+          <div><div class="agent-name">SCRIBE</div><div class="agent-domain">Content & Copy</div></div>
+        </div>
+        <div class="agent-desc">Blog generation, email drafting, social posts, readability scoring</div>
+        <div class="agent-meta">
+          <span class="badge badge-purple">1 TB</span>
+          <span class="badge badge-green">Expert</span>
+          <span class="badge badge-gray">5 endpoints</span>
+        </div>
+        <div class="agent-tags"><span class="tag">content</span><span class="tag">copy</span><span class="tag">marketing</span></div>
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-header">
+          <svg class="agent-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <div><div class="agent-name">PHANTOM</div><div class="agent-domain">OSINT & Investigation</div></div>
+        </div>
+        <div class="agent-desc">Domain intel, email investigation, digital footprint analysis, threat recon</div>
+        <div class="agent-meta">
+          <span class="badge badge-purple">3 TB</span>
+          <span class="badge badge-green">Expert</span>
+          <span class="badge badge-gray">4 endpoints</span>
+        </div>
+        <div class="agent-tags"><span class="tag">osint</span><span class="tag">investigation</span><span class="tag">intel</span></div>
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-header">
+          <svg class="agent-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          <div><div class="agent-name">DIPLOMAT</div><div class="agent-domain">HR & Compliance</div></div>
+        </div>
+        <div class="agent-desc">Job analysis, salary benchmarking, labor law guidance, compliance checks</div>
+        <div class="agent-meta">
+          <span class="badge badge-purple">2 TB</span>
+          <span class="badge badge-green">Expert</span>
+          <span class="badge badge-gray">4 endpoints</span>
+        </div>
+        <div class="agent-tags"><span class="tag">hr</span><span class="tag">salary</span><span class="tag">compliance</span></div>
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-header">
+          <svg class="agent-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+          <div><div class="agent-name">MERCHANT</div><div class="agent-domain">E-Commerce</div></div>
+        </div>
+        <div class="agent-desc">Listing optimization, dynamic pricing, inventory management, competitor analysis</div>
+        <div class="agent-meta">
+          <span class="badge badge-purple">2 TB</span>
+          <span class="badge badge-green">Expert</span>
+          <span class="badge badge-gray">4 endpoints</span>
+        </div>
+        <div class="agent-tags"><span class="tag">ecommerce</span><span class="tag">pricing</span><span class="tag">inventory</span></div>
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-header">
+          <svg class="agent-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2V3z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7V3z"/></svg>
+          <div><div class="agent-name">TUTOR</div><div class="agent-domain">Education</div></div>
+        </div>
+        <div class="agent-desc">Curriculum design, quiz generation, flashcards, skill assessment tracking</div>
+        <div class="agent-meta">
+          <span class="badge badge-purple">2 TB</span>
+          <span class="badge badge-green">Expert</span>
+          <span class="badge badge-gray">4 endpoints</span>
+        </div>
+        <div class="agent-tags"><span class="tag">education</span><span class="tag">learning</span><span class="tag">quizzes</span></div>
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-header">
+          <svg class="agent-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1010 10"/><path d="M12 2v10l6.93 4"/><path d="M22 2l-4 4"/><path d="M18 2h4v4"/></svg>
+          <div><div class="agent-name">CLIMATE</div><div class="agent-domain">Sustainability</div></div>
+        </div>
+        <div class="agent-desc">Carbon calculator, energy audit, ESG scoring, sustainability reporting</div>
+        <div class="agent-meta">
+          <span class="badge badge-purple">3 TB</span>
+          <span class="badge badge-green">Expert</span>
+          <span class="badge badge-gray">4 endpoints</span>
+        </div>
+        <div class="agent-tags"><span class="tag">climate</span><span class="tag">esg</span><span class="tag">carbon</span></div>
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-header">
+          <svg class="agent-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          <div><div class="agent-name">SIGNAL</div><div class="agent-domain">Communications & PR</div></div>
+        </div>
+        <div class="agent-desc">Press releases, crisis response planning, media kits, sentiment monitoring</div>
+        <div class="agent-meta">
+          <span class="badge badge-purple">1 TB</span>
+          <span class="badge badge-green">Expert</span>
+          <span class="badge badge-gray">4 endpoints</span>
+        </div>
+        <div class="agent-tags"><span class="tag">pr</span><span class="tag">crisis</span><span class="tag">media</span></div>
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-header">
+          <svg class="agent-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 6V2"/><path d="M7 6V4"/><path d="M17 6V4"/><path d="M2 12h20"/><circle cx="12" cy="15" r="1"/></svg>
+          <div><div class="agent-name">FORGE</div><div class="agent-domain">Manufacturing</div></div>
+        </div>
+        <div class="agent-desc">BOM analysis, supplier scoring, quality control, production optimization</div>
+        <div class="agent-meta">
+          <span class="badge badge-purple">4 TB</span>
+          <span class="badge badge-green">Authority</span>
+          <span class="badge badge-gray">4 endpoints</span>
+        </div>
+        <div class="agent-tags"><span class="tag">manufacturing</span><span class="tag">quality</span><span class="tag">supply-chain</span></div>
+      </div>
 
     </div>
+
+    <div class="beta-banner">
+      All agents are free during beta. 50 requests/day. Sign up to get your API key.
+    </div>
+
   </div>
 </section>
 
@@ -814,9 +1046,11 @@ results = silk.<span class="func">discover</span>(capabilities=[<span class="str
       <p>Open protocol for AI agent discovery</p>
     </div>
     <ul class="footer-links">
-      <li><a href="https://github.com/SilkWeb-AI/silkweb" target="_blank" rel="noopener">GitHub</a></li>
+      <li><a href="https://github.com/silkweb-protocol/silkweb" target="_blank" rel="noopener">GitHub</a></li>
       <li><a href="https://www.npmjs.com/package/silkweb-openclaw" target="_blank" rel="noopener">npm</a></li>
-      <li><a href="https://api.silkweb.io/api/v1" target="_blank" rel="noopener">API Docs</a></li>
+      <li><a href="/prompt.html">Prompt</a></li>
+      <li><a href="/download.html">Download</a></li>
+      <li><a href="https://api.silkweb.io/health" target="_blank" rel="noopener">API</a></li>
       <li><a href="mailto:information@silkweb.io">information@silkweb.io</a></li>
     </ul>
     <div class="footer-copy">&copy; 2026 SilkWeb Protocol &bull; Apache 2.0</div>
