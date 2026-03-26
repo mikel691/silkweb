@@ -48,6 +48,18 @@ class Agent(Base):
     a2a_compat = Column(JSONB, default=dict)
     mcp_compat = Column(JSONB, default=dict)
 
+    # Business crawl & AI profile data
+    crawl_data = Column(JSONB, nullable=True)
+    ai_profile = Column(JSONB, nullable=True)
+    faq_entries = Column(JSONB, nullable=True)
+    keywords = Column(ARRAY(String(100)), nullable=True)
+    city = Column(String(100), nullable=True)
+    state = Column(String(2), nullable=True)
+    phone = Column(String(20), nullable=True)
+    website_url = Column(String(500), nullable=True)
+    logo_url = Column(String(500), nullable=True)
+    last_crawled = Column(DateTime(timezone=True), nullable=True)
+
     # Status
     is_active = Column(Boolean, default=True, nullable=False)
     created_at = Column(
@@ -72,6 +84,9 @@ class Agent(Base):
 
     __table_args__ = (
         Index("ix_agents_is_active", "is_active"),
+        Index("ix_agents_city", "city"),
+        Index("ix_agents_state", "state"),
+        Index("ix_agents_keywords", "keywords", postgresql_using="gin"),
     )
 
 

@@ -7,9 +7,11 @@ Security:
 - Soft delete — agents are deactivated, not removed
 """
 
+import asyncio
 import logging
 import re
 import unicodedata
+from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
@@ -34,6 +36,63 @@ from api.services.tiers import compute_tier, next_tier_requirements
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/v1/agents", tags=["agents"])
+
+
+# ── Background crawl task ────────────────────────────────────────────────────
+
+async def _background_crawl(silk_id: str, url: str, user_input: dict, db_session_factory):
+    """Run website crawl in the background and update the agent record."""
+    from api.services.crawler import crawl_business
+    from api.services.ai_profile import generate_ai_profile
+
+    try:
+        logger.info(f"Starting background crawl for {silk_id}: {url}")
+
+        # Crawl the website
+        crawl_data = await crawl_business(url)
+
+        # Generate AI profile
+        ai_profile = generate_ai_profile(crawl_data, user_input)
+
+        # Update the agent record in a new DB session
+        async with db_session_factory() as db:
+            agent = await db.scalar(
+                select(Agent).where(Agent.silk_id == silk_id)
+            )
+            if not agent:
+                logger.warning(f"Agent {silk_id} not found for crawl update")
+                return
+
+            agent.crawl_data = crawl_data
+            agent.ai_profile = ai_profile
+            agent.faq_entries = ai_profile.get("faq_entries", [])
+            agent.keywords = ai_profile.get("keywords_ranked", [])[:30]
+            agent.last_crawled = datetime.now(timezone.utc)
+
+            # Enrich with crawl data
+            location = crawl_data.get("location", {})
+            contact = crawl_data.get("contact", {})
+
+            if location.get("city") and not agent.city:
+                agent.city = location["city"][:100]
+            if location.get("state") and not agent.state:
+                agent.state = location["state"][:2]
+            if contact.get("phone") and not agent.phone:
+                agent.phone = contact["phone"][:20]
+            if crawl_data.get("url"):
+                agent.website_url = crawl_data["url"][:500]
+            if crawl_data.get("logo_url"):
+                agent.logo_url = crawl_data["logo_url"][:500]
+
+            # Update description if crawl found a better one
+            if crawl_data.get("business_name") and agent.name.startswith(("My ", "The ")):
+                agent.name = crawl_data["business_name"][:128]
+
+            await db.commit()
+            logger.info(f"Background crawl completed for {silk_id}: {crawl_data.get('pages_crawled', 0)} pages")
+
+    except Exception as e:
+        logger.error(f"Background crawl failed for {silk_id}: {e}", exc_info=True)
 
 
 # ── Natural-language parsing helpers ──────────────────────────────────────────
@@ -310,6 +369,26 @@ async def register_agent_text(
     db.add(trust)
 
     logger.info(f"Agent registered via text: {agent_id} -> {silk_id}")
+
+    # Store website URL on agent if parsed
+    if parsed["endpoint"] and not parsed["endpoint"].startswith("https://pending"):
+        agent.website_url = parsed["endpoint"][:500]
+
+    # Trigger background crawl if URL was found in the registration text
+    url_in_text = re.search(r"https?://[^\s,;\"'<>]+", request.text)
+    if url_in_text:
+        crawl_url = url_in_text.group(0).rstrip(".")
+        user_input = {
+            "name": parsed["name"],
+            "description": parsed["description"],
+            "services": [],
+            "tags": parsed["tags"],
+        }
+        # Get the session factory from the db session's bind
+        from api.db.session import async_session_factory
+        asyncio.create_task(
+            _background_crawl(silk_id, crawl_url, user_input, async_session_factory)
+        )
 
     return TextRegisteredResponse(
         silk_id=silk_id,

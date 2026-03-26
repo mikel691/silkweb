@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>List Your Business — SilkWeb</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#e2e8f0;font-family:'Inter',sans-serif;min-height:100vh}
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,0.8);backdrop-filter:blur(12px);border-bottom:1px solid #111}
+.nav-logo{font-size:18px;font-weight:700;color:#fff;text-decoration:none}
+.nav a{color:#94a3b8;text-decoration:none;font-size:14px}
+.container{max-width:600px;margin:0 auto;padding:100px 24px 60px}
+.header{text-align:center;margin-bottom:48px}
+.header h1{font-size:32px;font-weight:700;margin-bottom:12px}
+.header h1 span{background:linear-gradient(135deg,#4F46E5,#7C3AED);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header p{color:#94a3b8;font-size:16px;line-height:1.6}
+.steps{display:flex;justify-content:center;gap:12px;margin-bottom:40px}
+.step-dot{width:10px;height:10px;border-radius:50%;background:#1e1e30;transition:all 0.3s}
+.step-dot.active{background:#4F46E5;box-shadow:0 0 12px rgba(79,70,229,0.5)}
+.step-dot.done{background:#10B981}
+.form-step{display:none;animation:fadeIn 0.4s ease}
+.form-step.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.card{background:#0a0a14;border:1px solid #1a1a2e;border-radius:16px;padding:32px;margin-bottom:24px}
+label{display:block;font-size:13px;color:#6366F1;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;font-weight:500}
+input,textarea,select{width:100%;padding:12px 16px;background:#111118;border:1px solid #1e1e30;border-radius:8px;color:#e2e8f0;font-size:15px;font-family:'Inter',sans-serif;outline:none;transition:border 0.2s}
+input:focus,textarea:focus,select:focus{border-color:#4F46E5}
+textarea{resize:vertical;min-height:100px}
+select{appearance:none;cursor:pointer}
+.field{margin-bottom:20px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.optional{font-size:11px;color:#475569;font-weight:400;text-transform:none;letter-spacing:0}
+.buttons{display:flex;gap:12px;margin-top:32px}
+.btn{padding:14px 32px;border-radius:8px;font-size:15px;font-weight:600;border:none;cursor:pointer;transition:all 0.2s;font-family:'Inter',sans-serif}
+.btn-primary{background:linear-gradient(135deg,#4F46E5,#7C3AED);color:#fff;flex:1}
+.btn-primary:hover{box-shadow:0 0 30px rgba(79,70,229,0.4);transform:translateY(-1px)}
+.btn-back{background:#111118;color:#94a3b8;border:1px solid #1e1e30}
+.btn-back:hover{background:#1a1a2e}
+.preview-card{background:#111118;border:1px solid #1e1e30;border-radius:12px;padding:24px;margin:24px 0}
+.preview-name{font-size:20px;font-weight:700;margin-bottom:4px}
+.preview-industry{color:#6366F1;font-size:14px;margin-bottom:12px}
+.preview-desc{color:#94a3b8;font-size:14px;line-height:1.6;margin-bottom:16px}
+.preview-meta{display:flex;flex-wrap:wrap;gap:8px}
+.preview-tag{background:#1a1a2e;border:1px solid #252540;border-radius:6px;padding:4px 10px;font-size:12px;color:#94a3b8}
+.success{display:none;text-align:center;padding:60px 0}
+.success h2{font-size:28px;font-weight:700;margin-bottom:12px}
+.success .silk-id{font-family:monospace;background:#111118;border:1px solid #1e1e30;border-radius:8px;padding:12px 20px;display:inline-block;margin:16px 0;color:#6366F1;font-size:14px}
+.success p{color:#94a3b8;margin-bottom:24px}
+.error{background:#1a0a0a;border:1px solid #7f1d1d;color:#fca5a5;padding:12px 16px;border-radius:8px;margin-bottom:16px;font-size:14px;display:none}
+@media(max-width:600px){
+  .field-row{grid-template-columns:1fr}
+  .header h1{font-size:26px}
+  .container{padding:80px 16px 40px}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo">SilkWeb</a>
+  <a href="/agents/">Browse Agents</a>
+</nav>
+
+<div class="container">
+  <div class="header">
+    <h1><span>List Your Business</span> on the AI Search Engine</h1>
+    <p>Takes 60 seconds. AI will use this to find and recommend your business.</p>
+  </div>
+
+  <div class="steps">
+    <div class="step-dot active" id="dot1"></div>
+    <div class="step-dot" id="dot2"></div>
+    <div class="step-dot" id="dot3"></div>
+  </div>
+
+  <div id="errorBox" class="error"></div>
+
+  <!-- STEP 1 -->
+  <div class="form-step active" id="step1">
+    <div class="card">
+      <div class="field">
+        <label>Business Name</label>
+        <input type="text" id="bizName" placeholder="Luna's Italian Kitchen" required>
+      </div>
+      <div class="field">
+        <label>What does your business do?</label>
+        <textarea id="bizDesc" placeholder="We're a family-owned Italian restaurant in downtown Miami specializing in handmade pasta and catering for events."></textarea>
+      </div>
+      <div class="field">
+        <label>Industry</label>
+        <select id="bizIndustry">
+          <option value="">Select your industry</option>
+          <option value="Restaurant / Food">Restaurant / Food</option>
+          <option value="Legal / Law">Legal / Law</option>
+          <option value="Healthcare / Medical">Healthcare / Medical</option>
+          <option value="Real Estate">Real Estate</option>
+          <option value="Finance / Accounting">Finance / Accounting</option>
+          <option value="Technology / IT">Technology / IT</option>
+          <option value="Construction / Manufacturing">Construction / Manufacturing</option>
+          <option value="Education">Education</option>
+          <option value="Retail / E-Commerce">Retail / E-Commerce</option>
+          <option value="Beauty / Wellness">Beauty / Wellness</option>
+          <option value="Automotive">Automotive</option>
+          <option value="Home Services">Home Services</option>
+          <option value="Marketing / Design">Marketing / Design</option>
+          <option value="Consulting">Consulting</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="buttons">
+        <button class="btn btn-primary" onclick="goStep(2)">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="form-step" id="step2">
+    <div class="card">
+      <div class="field">
+        <label>Website URL <span class="optional">(optional)</span></label>
+        <input type="url" id="bizUrl" placeholder="https://yourbusiness.com">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>City</label>
+          <input type="text" id="bizCity" placeholder="Miami">
+        </div>
+        <div class="field">
+          <label>State</label>
+          <select id="bizState">
+            <option value="">Select</option>
+            <option>AL</option><option>AK</option><option>AZ</option><option>AR</option><option>CA</option>
+            <option>CO</option><option>CT</option><option>DE</option><option>FL</option><option>GA</option>
+            <option>HI</option><option>ID</option><option>IL</option><option>IN</option><option>IA</option>
+            <option>KS</option><option>KY</option><option>LA</option><option>ME</option><option>MD</option>
+            <option>MA</option><option>MI</option><option>MN</option><option>MS</option><option>MO</option>
+            <option>MT</option><option>NE</option><option>NV</option><option>NH</option><option>NJ</option>
+            <option>NM</option><option>NY</option><option>NC</option><option>ND</option><option>OH</option>
+            <option>OK</option><option>OR</option><option>PA</option><option>RI</option><option>SC</option>
+            <option>SD</option><option>TN</option><option>TX</option><option>UT</option><option>VT</option>
+            <option>VA</option><option>WA</option><option>WV</option><option>WI</option><option>WY</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>Phone <span class="optional">(optional)</span></label>
+        <input type="tel" id="bizPhone" placeholder="(305) 555-1234">
+      </div>
+      <div class="field">
+        <label>Menu / Services Link <span class="optional">(optional)</span></label>
+        <input type="url" id="bizMenu" placeholder="https://yourbusiness.com/menu">
+      </div>
+      <div class="buttons">
+        <button class="btn btn-back" onclick="goStep(1)">Back</button>
+        <button class="btn btn-primary" onclick="goStep(3)">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3: PREVIEW -->
+  <div class="form-step" id="step3">
+    <div class="card">
+      <p style="font-size:13px;color:#6366F1;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;">HOW AI WILL SEE YOUR BUSINESS</p>
+      <div class="preview-card">
+        <div class="preview-name" id="prevName"></div>
+        <div class="preview-industry" id="prevIndustry"></div>
+        <div class="preview-desc" id="prevDesc"></div>
+        <div class="preview-meta" id="prevMeta"></div>
+      </div>
+      <div class="buttons">
+        <button class="btn btn-back" onclick="goStep(2)">Back</button>
+        <button class="btn btn-primary" id="submitBtn" onclick="submitBusiness()">List My Business</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="success" id="successView">
+    <h2>You're on the AI Search Engine!</h2>
+    <p>Your business is now searchable by ChatGPT, Claude, Gemini, and every AI assistant.</p>
+    <div class="silk-id" id="silkIdDisplay"></div>
+    <p style="font-size:13px;color:#475569;">This is your unique SilkWeb ID. Save it.</p>
+    <div style="display:flex;gap:12px;justify-content:center;margin-top:24px;">
+      <a href="/dashboard.html" class="btn btn-primary" style="text-decoration:none;text-align:center;">View Dashboard</a>
+      <a href="/agents/" class="btn btn-back" style="text-decoration:none;text-align:center;">Browse Agents</a>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+
+function goStep(n) {
+  const err = $('errorBox');
+  err.style.display = 'none';
+
+  // Validate
+  if (n === 2) {
+    if (!$('bizName').value.trim()) return showError('Business name is required');
+    if (!$('bizDesc').value.trim()) return showError('Please describe what your business does');
+    if (!$('bizIndustry').value) return showError('Please select an industry');
+  }
+  if (n === 3) {
+    if (!$('bizCity').value.trim()) return showError('City is required');
+    if (!$('bizState').value) return showError('State is required');
+    updatePreview();
+  }
+
+  document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+  $('step' + n).classList.add('active');
+
+  for (let i = 1; i <= 3; i++) {
+    const dot = $('dot' + i);
+    dot.classList.remove('active', 'done');
+    if (i < n) dot.classList.add('done');
+    if (i === n) dot.classList.add('active');
+  }
+}
+
+function showError(msg) {
+  const err = $('errorBox');
+  err.textContent = msg;
+  err.style.display = 'block';
+}
+
+function updatePreview() {
+  $('prevName').textContent = $('bizName').value;
+  $('prevIndustry').textContent = $('bizIndustry').value;
+  $('prevDesc').textContent = $('bizDesc').value;
+
+  const meta = $('prevMeta');
+  meta.innerHTML = '';
+  const city = $('bizCity').value;
+  const state = $('bizState').value;
+  if (city && state) meta.innerHTML += `<span class="preview-tag">${city}, ${state}</span>`;
+  if ($('bizUrl').value) meta.innerHTML += `<span class="preview-tag">${$('bizUrl').value}</span>`;
+  if ($('bizPhone').value) meta.innerHTML += `<span class="preview-tag">${$('bizPhone').value}</span>`;
+}
+
+async function submitBusiness() {
+  const btn = $('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Registering...';
+
+  const name = $('bizName').value.trim();
+  const desc = $('bizDesc').value.trim();
+  const industry = $('bizIndustry').value;
+  const url = $('bizUrl').value.trim();
+  const city = $('bizCity').value.trim();
+  const state = $('bizState').value;
+  const phone = $('bizPhone').value.trim();
+  const menu = $('bizMenu').value.trim();
+
+  let text = `My business is called ${name}. We are a ${industry} in ${city}, ${state}. ${desc}`;
+  if (url) text += `. Our website is ${url}`;
+  if (phone) text += `. Phone: ${phone}`;
+  if (menu) text += `. Menu/services: ${menu}`;
+
+  // Get user email from stored auth
+  let email = '';
+  let apiKey = '';
+  try {
+    const stored = localStorage.getItem('silkweb_user');
+    if (stored) {
+      const user = JSON.parse(stored);
+      email = user.email || '';
+      apiKey = user.api_key || '';
+    }
+  } catch(e) {}
+
+  if (!apiKey) {
+    apiKey = 'sw_demo_silkweb_public_agent_preview_2026';
+  }
+
+  try {
+    const resp = await fetch('https://api.silkweb.io/api/v1/agents/register-text', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': apiKey
+      },
+      body: JSON.stringify({ text, contact_email: email || 'noreply@silkweb.io' })
+    });
+
+    const data = await resp.json();
+
+    if (resp.ok && data.silk_id) {
+      // Show success
+      document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.step-dot').forEach(d => { d.classList.remove('active'); d.classList.add('done'); });
+      $('silkIdDisplay').textContent = data.silk_id;
+      $('successView').style.display = 'block';
+
+      // Store silk_id
+      try {
+        const stored = JSON.parse(localStorage.getItem('silkweb_user') || '{}');
+        stored.silk_id = data.silk_id;
+        stored.business_name = name;
+        localStorage.setItem('silkweb_user', JSON.stringify(stored));
+      } catch(e) {}
+    } else {
+      showError(data.detail || data.error || 'Registration failed. Please try again.');
+      btn.disabled = false;
+      btn.textContent = 'List My Business';
+    }
+  } catch(e) {
+    showError('Connection error. Please try again.');
+    btn.disabled = false;
+    btn.textContent = 'List My Business';
+  }
+}
+</script>
+</body>
+</html>

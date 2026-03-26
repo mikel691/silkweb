@@ -97,6 +97,13 @@ def create_app() -> FastAPI:
     app.include_router(agents_proxy.router)
     app.include_router(tts.router)
 
+    # Root-level sitemap route (redirects to /api/v1/sitemap-agents.xml)
+    from fastapi.responses import RedirectResponse
+
+    @app.get("/sitemap-agents.xml", include_in_schema=False)
+    async def sitemap_redirect():
+        return RedirectResponse(url="/api/v1/sitemap-agents.xml")
+
     return app
 
 
